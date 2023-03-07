@@ -3,6 +3,7 @@ import AppProvider from "./AppContext/Provider";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Timeline from "./pages/Timeline";
+import TrendingPage from "./pages/TrendingPage";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
             <Route path="/sign-up" element={<Signup/>}/>
 
             <Route path="/timeline" element={<Timeline />} />
+            <Route path="/hashtags/:hashtag" element={<TrendingPage />} />
 
 
           </Routes>
