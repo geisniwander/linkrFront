@@ -73,7 +73,7 @@ export default function Login(){
 
                 </ContainerForm>
                 <ContainerLink data-test="sign-up-link">
-                    <Link to="/cadastro" style={{textDecoration:'none'}}>
+                    <Link to="/sign-up" style={{textDecoration:'none'}}>
                         <p>First time? Create an account!</p>
                     </Link> 
                 </ContainerLink>
