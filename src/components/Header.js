@@ -1,9 +1,20 @@
 import styled from "styled-components";
 import { SlArrowDown, SlArrowUp } from "react-icons/sl"
-import { useState } from "react"
+import { useContext, useState } from "react"
+import { useNavigate } from "react-router-dom";
+import AppContext from "../AppContext/Context";
 
 export default function Header ({ avatar }) {
     const [clicado, setClicado] = useState(true)
+    const {data, setData} = useContext(AppContext)
+    const navigate = useNavigate();
+
+    function logout() {
+        localStorage.removeItem("data");
+        setData(undefined);
+        navigate("/")
+    }
+
     return (
         <>
             <HeaderContainer>
@@ -20,7 +31,7 @@ export default function Header ({ avatar }) {
                     <img src={avatar} alt="Avatar"/>
                 </Avatar>
             </HeaderContainer>
-            <Logout clicado={clicado}>
+            <Logout clicado={clicado} onClick={logout}>
                 Logout
             </Logout>
         </>
