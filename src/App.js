@@ -1,11 +1,28 @@
-
+import { BrowserRouter, Routes, Route } from "react-router-dom"; 
+import AppProvider from "./AppContext/Provider";
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
 
 function App() {
   return (
-    <div className="App">
-      <h1>teste</h1>
-    </div>
+    <BrowserRouter>
+      
+        <AppProvider>
+          <Routes>
+
+            <Route path="/" element={<Login/>}/>
+            <Route path="/cadastro" element={<Signup/>}/>
+
+
+
+
+          </Routes>
+        </AppProvider>
+     
+    </BrowserRouter>
   );
 }
 
 export default App;
+
+
