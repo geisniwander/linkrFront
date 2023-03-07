@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AppProvider from "./AppContext/Provider";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
+import Timeline from "./pages/Timeline";
 
 function App() {
   return (
@@ -13,7 +14,7 @@ function App() {
             <Route path="/" element={<Login/>}/>
             <Route path="/sign-up" element={<Signup/>}/>
 
-
+            <Route path="/timeline" element={<Timeline />} />
 
 
           </Routes>
