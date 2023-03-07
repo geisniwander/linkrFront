@@ -3,16 +3,16 @@ import { useContext, useState } from "react"
 import AppContext from "../AppContext/Context";
 import axios from "axios";
 
-export default function Publish ({avatar}) {
+export default function Publish ({avatar, atualiza}) {
     const [clicado, setClicado] = useState(false);
     const [publish, setPublish] = useState({ link: "", description: "" });
     const { token } = useContext(AppContext);
-console.log(token)
+    
     function salvar(event) {
         event.preventDefault();
         setClicado(true);
         const requisicao = axios.post(`${process.env.REACT_APP_API_URL}/publish`, publish, { headers: { 'Authorization': `Bearer ${token}` } });
-        requisicao.then(() => {setPublish({ link: "", description: "" });setClicado(false);});
+        requisicao.then(() => {setPublish({ link: "", description: "" });setClicado(false);atualiza();});
         requisicao.catch((res) => { alert("There was an error publishing your link"); setClicado(false); });
     }
     return (
@@ -20,8 +20,8 @@ console.log(token)
             <img src={avatar} alt="avatar"/>
             <Formulario onSubmit={salvar} clicado={clicado}>
                 <h2>What are you going to share today?</h2>
-                <Link wrap="hard" disabled={clicado} required type="url" placeholder="http://..." value={publish.link} onChange={e => setPublish({ ...publish, link: e.target.value })}/>
-                <Description wrap="hard" disabled={clicado} type="text" placeholder="Awesome article about #javascript" value={publish.description} onChange={e => setPublish({ ...publish, description: e.target.value })}/>
+                <Link disabled={clicado} required type="url" placeholder="http://..." value={publish.link} onChange={e => setPublish({ ...publish, link: e.target.value })}/>
+                <Description disabled={clicado} type="text" placeholder="Awesome article about #javascript" value={publish.description} onChange={e => setPublish({ ...publish, description: e.target.value })}/>
                 <button disabled={clicado} type="submit">{ clicado ? "Publishing...": "Publish"}</button>
             </Formulario>
         </PublishContainer>
