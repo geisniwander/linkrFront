@@ -15,8 +15,10 @@ export default function TrendingPage() {
   const { hashtag } = useParams();
   const [posts, setPosts] = useState([]);
   const [hashtags, setHashtags] = useState([]);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     async function fetchPosts() {
+      setLoading(true);
       if (config) {
         const requisicao = axios.get(
           `${process.env.REACT_APP_API_URL}/hashtags/${hashtag}/posts`,
@@ -24,8 +26,10 @@ export default function TrendingPage() {
         );
         requisicao.then((res) => {
           setPosts(res.data);
+          setLoading(false);
         });
         requisicao.catch((res) => {
+          setLoading(false);
           alert(res.response.data);
         });
       } else {
@@ -68,7 +72,11 @@ export default function TrendingPage() {
         <HashtagBox hashtags={hashtags} />
       </HashtagBoxContainer>
       <PostsContainer>
-        <Feed posts={posts} />
+        {loading ? (
+          <LoadingStyle>Loading...</LoadingStyle>
+        ) : (
+          <Feed posts={posts} />
+        )}
       </PostsContainer>
     </HashtagsContent>
   );
@@ -122,4 +130,15 @@ const HashtagBoxContainer = styled.div`
     margin-bottom: 10px;
     width: 100%;
   }
+`;
+
+const LoadingStyle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  color: #ffffff;
+  font-size: 30px;
+  text-align: center;
+  margin-top: 60px;
 `;
