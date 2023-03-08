@@ -13,33 +13,37 @@ export default function Timeline () {
     const { token } = useContext(AppContext);
     const [avatar, setAvatar] = useState();
     const [posts, setPosts] = useState([]);
+
     useEffect(() => {
         if (token) {
-            const requisicao = axios.get(`${process.env.REACT_APP_API_URL}/timeline`, { headers: { 'Authorization': `Bearer ${token}` } });
-            requisicao.then((res) => {setAvatar(res.data.avatar);setPosts(res.data.posts);setLoading(false)});
-            requisicao.catch((res) => { alert("An error occured while trying to fetch the posts, please refresh the page"); });
+
+            const requisicaoAvatar = axios.get(`${process.env.REACT_APP_API_URL}/avatar`, { headers: { 'Authorization': `Bearer ${token}` } });
+            requisicaoAvatar.then((res) => {setAvatar(res.data.picture_url)});
+            requisicaoAvatar.catch((res) => { alert(res.response.data); });
+
+            const requisicaoPosts = axios.get(`${process.env.REACT_APP_API_URL}/timeline`, { headers: { 'Authorization': `Bearer ${token}` } });
+            requisicaoPosts.then((res) => {setPosts(res.data);setLoading(false)});
+            requisicaoPosts.catch((res) => { alert("An error occured while trying to fetch the posts, please refresh the page"); });
+            
         }else{
             navigate("/");
         }
     }, [ token, navigate ]);
 
     function atualiza(){
+        setLoading(true)
         const requisicao = axios.get(`${process.env.REACT_APP_API_URL}/timeline`, { headers: { 'Authorization': `Bearer ${token}` } });
-        requisicao.then((res) => {setAvatar(res.data.avatar);setPosts(res.data.posts);setLoading(false)});
+        requisicao.then((res) => {setPosts(res.data);setLoading(false)});
         requisicao.catch((res) => { alert("An error occured while trying to fetch the posts, please refresh the page"); });
     }
-    function page(){
-        return(
-            <Feed posts={posts}/>
-        )
-    }
+
     return (
         <HomeContainer>
             <Header avatar={avatar}/>
             <TimelineContainer>
                 <Title>timeline</Title>
                 <Publish  avatar={avatar} atualiza={atualiza}/>
-                { loading ? <Loading>Loading...</Loading>  : page()} 
+                { loading ? <Loading>Loading...</Loading>  : <Feed posts={posts}/>} 
             </TimelineContainer>
         </HomeContainer>
     )
