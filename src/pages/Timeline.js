@@ -37,9 +37,9 @@ export default function Timeline () {
         <HomeContainer>
             <Header avatar={avatar}/>
             <TimelineContainer>
-                <h1>timeline</h1>
+                <Title>timeline</Title>
                 <Publish  avatar={avatar} atualiza={atualiza}/>
-                { loading ? <Loading><h4>Loading...</h4></Loading>  : page()} 
+                { loading ? <Loading>Loading...</Loading>  : page()} 
             </TimelineContainer>
         </HomeContainer>
     )
@@ -56,29 +56,29 @@ const Loading = styled.div`
     align-items: center;
     justify-content: center;
     width: 100%;
-    h4{
-        color: #FFFFFF;
-        font-size: 30px;
-        text-align: center;
-        margin-top: 60px;
-    }
+    color: #FFFFFF;
+    font-size: 30px;
+    text-align: center;
+    margin-top: 60px;
+    
 `
 const TimelineContainer = styled.div`
     margin-left: auto;
     margin-right: auto;
     max-width: 611px;
-    h1{
-        font-family: 'Oswald';
-        font-style: normal;
-        font-weight: 700;
-        font-size: 43px;
-        line-height: 64px;
-        color: #FFFFFF;
-        margin: 78px 0px 43px 0px;
-        @media (max-width: 375px) {
-            font-size: 33px;
-            line-height: 49px;
-            margin: 19px 0px 19px 17px;
-        }
+`;
+
+const Title = styled.h1`
+    font-family: 'Oswald';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 43px;
+    line-height: 64px;
+    color: #FFFFFF;
+    margin: 78px 0px 43px 0px;
+    @media (max-width: 375px) {
+        font-size: 33px;
+        line-height: 49px;
+        margin: 19px 0px 19px 17px;
     }
 `;
