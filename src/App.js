@@ -16,7 +16,7 @@ function App() {
             <Route path="/sign-up" element={<Signup/>}/>
 
             <Route path="/timeline" element={<Timeline />} />
-            <Route path="/hashtags/:hashtag" element={<TrendingPage />} />
+            <Route path="/hashtag/:hashtag" element={<TrendingPage />} />
 
 
           </Routes>
