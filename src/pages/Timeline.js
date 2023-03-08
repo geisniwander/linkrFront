@@ -6,25 +6,35 @@ import AppContext from "../AppContext/Context";
 import { useNavigate } from "react-router-dom";
 import Publish from "../components/Publish";
 import Feed from "../components/Feed";
+import HashtagBox from "../components/HashtagsBox";
 
 export default function Timeline () {
     const [loading, setLoading] = useState(true)
     const navigate = useNavigate();
-    const { token } = useContext(AppContext);
+    const { token, config } = useContext(AppContext);
     const [avatar, setAvatar] = useState();
+    const [name, setName] = useState();
     const [posts, setPosts] = useState([]);
+    const [hashtags, setHashtags] = useState([]);
 
     useEffect(() => {
         if (token) {
 
             const requisicaoAvatar = axios.get(`${process.env.REACT_APP_API_URL}/avatar`, { headers: { 'Authorization': `Bearer ${token}` } });
-            requisicaoAvatar.then((res) => {setAvatar(res.data.picture_url)});
+            requisicaoAvatar.then((res) => {setAvatar(res.data.picture_url); setName(res.data.username)});
             requisicaoAvatar.catch((res) => { alert(res.response.data); });
 
             const requisicaoPosts = axios.get(`${process.env.REACT_APP_API_URL}/timeline`, { headers: { 'Authorization': `Bearer ${token}` } });
             requisicaoPosts.then((res) => {setPosts(res.data);setLoading(false)});
             requisicaoPosts.catch((res) => { alert("An error occured while trying to fetch the posts, please refresh the page"); });
             
+            axios.get(`${process.env.REACT_APP_API_URL}/hashtags`, config)
+            .then((res) => {
+                setHashtags(res.data.map((a) => a.name.replace("#", "")));
+            })
+            .catch((res) => {
+                alert(res.response.data);
+            });
         }else{
             navigate("/");
         }
@@ -40,11 +50,16 @@ export default function Timeline () {
     return (
         <HomeContainer>
             <Header avatar={avatar}/>
-            <TimelineContainer>
-                <Title>timeline</Title>
-                <Publish  avatar={avatar} atualiza={atualiza}/>
-                { loading ? <Loading>Loading...</Loading>  : <Feed posts={posts}/>} 
-            </TimelineContainer>
+            <BodyContainer>
+                <TimelineContainer>
+                    <Title>timeline</Title>
+                    <Publish  avatar={avatar} atualiza={atualiza}/>
+                    { loading ? <Loading>Loading...</Loading>  : <Feed posts={posts} name={name}/>} 
+                </TimelineContainer>
+                <HashtagBoxContainer>
+                    <HashtagBox hashtags={hashtags} />
+                </HashtagBoxContainer>
+            </BodyContainer>  
         </HomeContainer>
     )
 }
@@ -65,10 +80,20 @@ const Loading = styled.div`
     text-align: center;
     margin-top: 60px;
     
-`
+`;
+const HashtagBoxContainer = styled.div`
+    margin-top: 160px;
+    margin-left: 25px;
+    @media (max-width: 913px) {
+        display: none;
+    }
+
+`;
+const BodyContainer = styled.div`
+    display: flex;
+    justify-content: center;
+`;
 const TimelineContainer = styled.div`
-    margin-left: auto;
-    margin-right: auto;
     max-width: 611px;
 `;
 

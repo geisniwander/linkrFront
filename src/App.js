@@ -4,6 +4,7 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Timeline from "./pages/Timeline";
 import TrendingPage from "./pages/TrendingPage";
+import 'react-tooltip/dist/react-tooltip.css';
 
 function App() {
   return (

@@ -5,8 +5,9 @@ import { AiOutlineHeart, AiFillHeart} from "react-icons/ai";
 import { useContext, useState, useEffect } from "react";
 import axios from "axios";
 import AppContext from "../AppContext/Context";
+import { Tooltip } from 'react-tooltip';
 
-export default function Feed({ posts }) {
+export default function Feed({ posts, name }) {
 
     const navigate = useNavigate();
     const { token } = useContext(AppContext);
@@ -36,17 +37,44 @@ export default function Feed({ posts }) {
         requisicao.then((res) => {atualizaLikes()});
         requisicao.catch((res) => { alert(res.response.data); });
     }
+    function names(quantLikes, liked){
+        let message = ""
+        if(liked.length !== 0){
+            message += "Você"
+            const quant = quantLikes.filter(l => l.username !== liked[0].username)
+            if(quant.length === 1){
+                message += ` e ${quant[0].username}`
+            }else if(quant.length > 1){
+                message += `, ${quant[0].username} e outras ${quant.length-1}`
+            }
+        }else{
+            if(quantLikes.length === 1){
+                message += `${quantLikes[0].username}`
+            }else if(quantLikes.length === 2){
+                message += `${quantLikes[0].username} e ${quantLikes[1].username}`
+            }else if(quantLikes.length > 2){
+                message += `${quantLikes[0].username}, ${quantLikes[1].username} e outras ${quantLikes.length-2}`
+            }
+        }
+
+        return message
+        
+    }
     return (
         <FeedContainer>
             {(posts.length === 0) ? <Mensage data-test="message">There are no posts yet</Mensage> : posts.map(p => {
+
                 const quantLikes = likes.filter(l => l.post_id === p.id)
-                const liked = quantLikes.filter(l => l.username === p.username)
+
+                const liked = quantLikes.filter(l => l.username === name)
+
                 return (
                     <Post key={p.id} data-test="post">
                         <AvatarLikeContainer>
                             <ImageAvatar src={p.picture_url} alt={"avatar"} />
                             {liked.length === 0 ? <AiOutlineHeart onClick={() => postlike(p)} data-test="like-btn"/> : <span onClick={() => removelike(p)} data-test="like-btn"><AiFillHeart/></span>}
-                            <p data-test="counter">{quantLikes.length} likes</p>
+                            <p data-tooltip-id="my-tooltip" data-tooltip-content={quantLikes.length === 0 ? "Ninguém curtiu" : names(quantLikes, liked)} data-test="counter">{quantLikes.length} likes</p>
+                            <ReactTooltipStyled id="my-tooltip" data-test="tooltip"/>
                         </AvatarLikeContainer>
                         <ConteudoContainer>
                             <h4 data-test="username">{p.username}</h4>
@@ -86,7 +114,17 @@ const Mensage = styled.h3`
     text-align: center;
     margin-top: 60px;
 `;
-
+export const ReactTooltipStyled = styled(Tooltip)`
+    padding: 5px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 3px;
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 11px;
+    line-height: 13px;
+    color: #505050;
+`;
 const AvatarLikeContainer = styled.div`
     display: flex;
     flex-direction: column;

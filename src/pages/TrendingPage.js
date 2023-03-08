@@ -12,6 +12,7 @@ export default function TrendingPage() {
   const navigate = useNavigate();
   const { config } = useContext(AppContext);
   const [avatar, setAvatar] = useState();
+  const [name, setName] = useState();
   const { hashtag } = useParams();
   const [posts, setPosts] = useState([]);
   const [hashtags, setHashtags] = useState([]);
@@ -47,6 +48,7 @@ export default function TrendingPage() {
       );
       requisicao.then((res) => {
         setAvatar(res.data.picture_url);
+        setName(res.data.username);
       });
       requisicao.catch((res) => {
         alert(res.response.data);
@@ -75,7 +77,7 @@ export default function TrendingPage() {
         {loading ? (
           <LoadingStyle>Loading...</LoadingStyle>
         ) : (
-          <Feed posts={posts} />
+          <Feed posts={posts} name={name}/>
         )}
       </PostsContainer>
     </HashtagsContent>
