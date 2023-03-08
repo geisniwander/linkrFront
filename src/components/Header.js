@@ -11,9 +11,9 @@ export default function Header ({ avatar }) {
     const navigate = useNavigate();
 
     function logout() {
-        localStorage.removeItem("data");
+        localStorage.removeItem("token");
         setData(undefined);
-        navigate("/")
+        window.location.reload();
     }
 
     return (

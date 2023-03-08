@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import AppContext from "../AppContext/Context";
@@ -8,9 +8,18 @@ import AppContext from "../AppContext/Context";
 export default function Login(){
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const {setToken, setData} = useContext(AppContext);
+    const {token, setToken, setData} = useContext(AppContext);
     const navigate = useNavigate();
     const [ status, setStatus ] = useState(false) 
+
+
+    useEffect(() => {
+        if (token) {
+            navigate("/timeline")
+        } else {
+            navigate("/")
+        }
+    }, [token, navigate] )
 
     function signin(event){
         event.preventDefault();
@@ -37,9 +46,9 @@ export default function Login(){
         localStorage.setItem("token", res.data.token)
         setToken(res.data.token)
 
-        const data = JSON.stringify(res.data)
-        localStorage.setItem("data", data)
-        setData(res.data)
+        // const data = JSON.stringify(res.data)
+        // localStorage.setItem("data", data)
+        // setData(res.data)
      
         navigate("/timeline");
     })
