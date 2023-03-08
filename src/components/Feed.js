@@ -15,7 +15,7 @@ export default function Feed ({posts}) {
                             <h5>
                                 <ReactTagify
                                     colors={"#ffffff"}    
-                                    tagClicked={(tag)=>{navigate(`/hashtags/${tag.replace("#", '')}`)}}
+                                    tagClicked={(tag)=>{navigate(`/hashtag/${tag.replace("#", '')}`)}}
                                   >
                                  {p.text}
                                 </ReactTagify>
