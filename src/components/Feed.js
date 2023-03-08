@@ -1,6 +1,9 @@
 import styled from "styled-components";
+import { ReactTagify } from "react-tagify";
+import { useNavigate } from "react-router-dom";
 
 export default function Feed ({posts}) {
+    const navigate = useNavigate();
     return (
         <FeedContainer>
             {(posts.length === 0) ? <Mensage>There are no posts yet</Mensage> : posts.map(p => {
@@ -9,7 +12,14 @@ export default function Feed ({posts}) {
                         <ImageAvatar src={p.picture_url} alt={"avatar"}/>
                         <div>
                             <h4>{p.username}</h4>
-                            <h5>{p.text}</h5>
+                            <h5>
+                                <ReactTagify
+                                    colors={"#ffffff"}    
+                                    tagClicked={(tag)=>{navigate(`/hashtags/${tag.replace("#", '')}`)}}
+                                  >
+                                 {p.text}
+                                </ReactTagify>
+                            </h5>
                             <LinkContainer onClick={()=> window.open(p.url)}>
                                 <div>
                                     <h1>{p.title}</h1>
