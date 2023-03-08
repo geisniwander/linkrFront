@@ -8,26 +8,13 @@ import Header from "../components/Header";
 import HashtagBox from "../components/HashtagsBox";
 import PostComponent from "../components/PostComponent";
 
-const testHashTags = [
-  "javascript",
-  "react",
-  "react-native",
-  "material",
-  "web-dev",
-  "mobile",
-  "css",
-  "html",
-  "node",
-  "sql",
-];
-
 export default function TrendingPage() {
   const navigate = useNavigate();
   const { config } = useContext(AppContext);
   const [avatar, setAvatar] = useState();
   const { hashtag } = useParams();
   const [posts, setPosts] = useState([]);
-
+  const [hashtags, setHashtags] = useState([]);
   useEffect(() => {
     async function fetchPosts() {
       if (config) {
@@ -46,7 +33,7 @@ export default function TrendingPage() {
       }
     }
     fetchPosts();
-  }, [hashtag]);
+  }, [hashtag, config, navigate]);
 
   useEffect(() => {
     if (config) {
@@ -60,6 +47,14 @@ export default function TrendingPage() {
       requisicao.catch((res) => {
         alert(res.response.data);
       });
+      axios
+        .get(`${process.env.REACT_APP_API_URL}/hashtags`, config)
+        .then((res) => {
+          setHashtags(res.data.map((a) => a.name.replace("#", "")));
+        })
+        .catch((res) => {
+          alert(res.response.data);
+        });
     } else {
       navigate("/");
     }
@@ -70,7 +65,7 @@ export default function TrendingPage() {
       <Header avatar={avatar} />
       <h1 data-test="hashtag-title"># {hashtag}</h1>
       <HashtagBoxContainer>
-        <HashtagBox hashtags={testHashTags} />
+        <HashtagBox hashtags={hashtags} />
       </HashtagBoxContainer>
       <PostsContainer>
         {posts.map((post) => (
