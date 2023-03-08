@@ -3,6 +3,7 @@ import { SlArrowDown, SlArrowUp } from "react-icons/sl"
 import { useContext, useState } from "react"
 import { useNavigate } from "react-router-dom";
 import AppContext from "../AppContext/Context";
+import SearchInput from "./SearchInput";
 
 export default function Header ({ avatar }) {
     const [clicado, setClicado] = useState(true)
@@ -21,6 +22,7 @@ export default function Header ({ avatar }) {
                 <Logo>
                     linkr
                 </Logo>
+                <SearchInput/>
                 <Avatar onClick={() => setClicado(!clicado)}>
                     <IconDown clicado={clicado}>
                         <SlArrowDown/> 
