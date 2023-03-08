@@ -6,7 +6,7 @@ import styled from "styled-components";
 import AppContext from "../AppContext/Context";
 import Header from "../components/Header";
 import HashtagBox from "../components/HashtagsBox";
-import PostComponent from "../components/PostComponent";
+import Feed from "../components/Feed";
 
 export default function TrendingPage() {
   const navigate = useNavigate();
@@ -63,35 +63,32 @@ export default function TrendingPage() {
   return (
     <HashtagsContent>
       <Header avatar={avatar} />
-      <h1 data-test="hashtag-title"># {hashtag}</h1>
+      <PageTitle data-test="hashtag-title"># {hashtag}</PageTitle>
       <HashtagBoxContainer>
         <HashtagBox hashtags={hashtags} />
       </HashtagBoxContainer>
       <PostsContainer>
-        {posts.map((post) => (
-          <PostComponent post={post} key={post.id} />
-        ))}
+        <Feed posts={posts} />
       </PostsContainer>
     </HashtagsContent>
   );
 }
 
 const HashtagsContent = styled.div`
-  h1 {
-    padding-top: 127px;
-    padding-left: 241px;
-    height: 64px;
-    font-family: "Oswald", sans-serif;
-    font-size: 43px;
-    color: #ffffff;
-    @media (max-width: 611px) {
-      padding-left: 15px;
-    }
-  }
   background-color: #333333;
   height: 100vh;
 `;
-
+const PageTitle = styled.h1`
+  padding-top: 127px;
+  padding-left: 241px;
+  height: 64px;
+  font-family: "Oswald", sans-serif;
+  font-size: 43px;
+  color: #ffffff;
+  @media (max-width: 611px) {
+    padding-left: 15px;
+  }
+`;
 const PostsContainer = styled.div`
   margin-left: 241px;
   margin-top: 43px;
