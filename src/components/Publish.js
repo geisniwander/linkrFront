@@ -16,13 +16,13 @@ export default function Publish ({avatar, atualiza}) {
         requisicao.catch((res) => { alert("There was an error publishing your link"); setClicado(false); });
     }
     return (
-        <PublishContainer>
+        <PublishContainer data-test="publish-box">
             <img src={avatar} alt="avatar"/>
             <Formulario onSubmit={salvar} clicado={clicado}>
                 <h2>What are you going to share today?</h2>
-                <Link disabled={clicado} required type="url" placeholder="http://..." value={publish.link} onChange={e => setPublish({ ...publish, link: e.target.value })}/>
-                <Description disabled={clicado} type="text" placeholder="Awesome article about #javascript" value={publish.description} onChange={e => setPublish({ ...publish, description: e.target.value })}/>
-                <button disabled={clicado} type="submit">{ clicado ? "Publishing...": "Publish"}</button>
+                <Link disabled={clicado} required type="url" placeholder="http://..." value={publish.link} onChange={e => setPublish({ ...publish, link: e.target.value })} data-test="link"/>
+                <Description disabled={clicado} type="text" placeholder="Awesome article about #javascript" value={publish.description} onChange={e => setPublish({ ...publish, description: e.target.value })} data-test="description"/>
+                <button disabled={clicado} type="submit" data-test="publish-btn">{ clicado ? "Publishing...": "Publish"}</button>
             </Formulario>
         </PublishContainer>
         
