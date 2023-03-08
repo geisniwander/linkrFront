@@ -42,7 +42,7 @@ export default function TrendingPage() {
   useEffect(() => {
     if (config) {
       const requisicao = axios.get(
-        `${process.env.REACT_APP_API_URL}/timeline`,
+        `${process.env.REACT_APP_API_URL}/avatar`,
         config
       );
       requisicao.then((res) => {
