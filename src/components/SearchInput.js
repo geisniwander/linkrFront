@@ -47,7 +47,6 @@ export default function SearchInput({ avatar }) {
     if (clicked && selectedUser !== null) {
       setUsername("");
       navigate(`/user/${selectedUser}`);
-      setShowSearchContainer(false);
       setClicked(false);
       setSelectedUser(null);
       setUsername("");
@@ -64,11 +63,6 @@ export default function SearchInput({ avatar }) {
           onChange={(e) => setUsername(e.target.value)}
           disabled={loading}
           data-test="search"
-          onClick={(e) => {
-            e.preventDefault();
-            setShowSearchContainer(true);
-          }}
-          onBlur={() => setShowSearchContainer(false)}
           required
         />
         <SearchIcon>
@@ -79,7 +73,6 @@ export default function SearchInput({ avatar }) {
       {users.length > 0 && (
         <SearchContainer
           id="search-container"
-          showSearchContainer={showSearchContainer}
         >
           {users.map((user) => (
             <UserContainer data-test="user-search">
@@ -132,7 +125,6 @@ const SearchContainer = styled.div`
   h1 {
     cursor: pointer;
   }
-  display: ${(props) => (props.showSearchContainer ? "block" : "none")};
   @media (max-width: 650px) {
     top:130px;
     width:86%;
