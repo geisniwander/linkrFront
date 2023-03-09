@@ -192,7 +192,7 @@ const AvatarLikeContainer = styled.div`
         text-align: center;
         color: #FFFFFF;
         margin-top: 4px;
-        @media (max-width: 375px) {
+        @media (max-width: 650px) {
             font-size: 9px;
             line-height: 11px;
         }
@@ -209,6 +209,9 @@ const PostHeaderContainer = styled.div`
     div{
         display: ${props => props.myPost ? "flex" : "none"};
     }
+    @media (max-width: 650px) {
+        width:95%;
+    }
 `;
 
 const PostContainer = styled.div`
@@ -218,6 +221,10 @@ const PostContainer = styled.div`
     color: #FFFFFF;
     display: flex;
     padding: 19px;
+    @media (max-width: 650px) {
+        border-radius: 0px;
+        min-height: 232px;
+    }
     h4{
         display: flex;
         font-family: 'Lato';
@@ -228,7 +235,7 @@ const PostContainer = styled.div`
         margin-bottom: 7px;
         flex-wrap: wrap;
         cursor: pointer;
-        @media (max-width: 375px) {
+        @media (max-width: 650px) {
             font-size: 17px;
             line-height: 20px;
         }
@@ -243,15 +250,12 @@ const PostContainer = styled.div`
         color: #B7B7B7;
         flex-wrap: wrap;
         margin-bottom: 20px;
-        @media (max-width: 375px) {
+        @media (max-width: 650px) {
             font-size: 15px;
             line-height: 18px;
         }
     }
-    @media (max-width: 375px) {
-        border-radius: 0px;
-        min-height: 232px;
-    }
+ 
 `;
 
 const Description = styled.input`
@@ -272,13 +276,9 @@ const LinkContainer = styled.a`
     display: flex;
     justify-content: space-between;
     text-decoration: none;
-    @media (max-width: 375px) {
-        width: 278px;
-        min-height: 115px;
-    }
     div{
         margin: 19px;
-        @media (max-width: 375px) {
+        @media (max-width: 650px) {
             margin: 8px;
         }
     }
@@ -290,7 +290,7 @@ const LinkContainer = styled.a`
         line-height: 19px;
         color: #CECECE;
         margin-bottom: 5px;
-        @media (max-width: 375px) {
+        @media (max-width: 650px) {
             font-size: 11px;
             line-height: 13px;
             margin-bottom: 4px;
@@ -304,7 +304,7 @@ const LinkContainer = styled.a`
         line-height: 13px;
         color: #9B9595;
         margin-bottom: 13px;
-        @media (max-width: 375px) {
+        @media (max-width: 650px) {
             font-size: 9px;
             line-height: 11px;
             margin-bottom: 4px;
@@ -317,11 +317,16 @@ const LinkContainer = styled.a`
         font-size: 11px;
         line-height: 13px;
         color: #CECECE;
-        @media (max-width: 375px) {
+        @media (max-width: 650px) {
             font-size: 9px;
             line-height: 11px;
         }
     }
+    @media (max-width: 650px) {
+        width: 100%;
+        min-height: 115px;
+    }        
+
 `;
 
 const ImageLink = styled.img`
@@ -331,11 +336,11 @@ const ImageLink = styled.img`
     min-height: 155px;
     height: 100fr;
     border-radius: 0px 12px 13px 0px;
-    @media (max-width: 375px) {
+    @media (max-width: 650px) {
         width: 95px;
         height: 115px;
+        display:flex;
     }
-    
 `;
 
 const ImageAvatar = styled.img`
@@ -343,7 +348,7 @@ const ImageAvatar = styled.img`
     height: 50px;
     border-radius: 26.5px;
     margin-bottom: 18px;
-    @media (max-width: 375px) {
+    @media (max-width: 650px) {
         width: 40px;
         height: 40px;
     }
@@ -400,3 +405,4 @@ const ButtonConfirm = styled.button`
     border: none;
     margin-left: 15px;
 `;
+

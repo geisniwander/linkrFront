@@ -131,9 +131,15 @@ const HashtagBoxContainer = styled.div`
 const BodyContainer = styled.div`
   display: flex;
   justify-content: center;
+  @media (max-width: 913px) {
+    width: 100%;
+  }
 `;
 const TimelineContainer = styled.div`
   max-width: 611px;
+  @media (max-width: 913px) {
+    width: 100%;
+  }
 `;
 
 const Title = styled.h1`

@@ -22,7 +22,9 @@ export default function Header ({ avatar }) {
                 <Logo>
                     linkr
                 </Logo>
-                <SearchInput/>
+                <InputDesktop>
+                    <SearchInput/>
+                </InputDesktop>
                 <Avatar onClick={() => setClicado(!clicado)}>
                     <IconDown clicado={clicado}>
                         <SlArrowDown/> 
@@ -36,6 +38,9 @@ export default function Header ({ avatar }) {
             <Logout clicado={clicado} data-test="menu">
                 <button onClick={logout} data-test="logout">Logout</button>
             </Logout>
+            <InputMobile>
+                    <SearchInput/>
+            </InputMobile>
         </>
         
     )
@@ -52,7 +57,7 @@ const HeaderContainer = styled.div`
     top: 0;
     left: 0;
     color: #FFFFFF;
-    @media (max-width: 375px) {
+    @media (max-width: 650px) {
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     }
 `;
@@ -125,4 +130,23 @@ const Logout = styled.div`
         font-size: 15px;
         line-height: 18px;
     }
+`;
+
+const InputDesktop = styled.div`
+width:40%;
+display: flex;
+justify-content:center;
+@media (max-width: 650px) {
+    display:none;
+}
+`;
+
+const InputMobile = styled.div`
+width:100%;
+display: flex;
+justify-content:center;
+margin-top: 20px;
+@media (min-width: 650px) {
+    display:none;
+}
 `;
