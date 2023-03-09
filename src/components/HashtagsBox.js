@@ -7,7 +7,7 @@ export default function HashtagBox({ hashtags }) {
       <h2>trending</h2>
       {hashtags.map((name) => (
         <Link data-test="hashtag" to={`/hashtag/${name}`}>
-          # {name}
+          #{name}
         </Link>
       ))}
     </StyledBox>
