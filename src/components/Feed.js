@@ -77,7 +77,7 @@ export default function Feed({ posts, name }) {
                             <ReactTooltipStyled id="my-tooltip" data-test="tooltip" isOpen={true}/>
                         </AvatarLikeContainer>
                         <ConteudoContainer>
-                            <h4 data-test="username">{p.username}</h4>
+                            <h4 data-test="username" onClick={e => {e.preventDefault(); navigate(`/user/${p.id}`)}}>{p.username}</h4>
                             <h5 data-test="description">
                                 <ReactTagify
                                     colors={"#ffffff"}
@@ -173,6 +173,7 @@ const Post = styled.div`
         margin-bottom: 7px;
         flex-wrap: wrap;
         margin-right: 22px;
+        cursor: pointer;
         @media (max-width: 375px) {
             font-size: 17px;
             line-height: 20px;
