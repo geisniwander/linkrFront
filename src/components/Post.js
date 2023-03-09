@@ -175,7 +175,7 @@ const ReactTooltipStyled = styled(Tooltip)`
 `;
 
 const AiFillHeartStyled = styled(AiFillHeart)`
-    color: #AC0000;
+    color: #FF0000;
 `;
 const AvatarLikeContainer = styled.div`
     display: flex;
