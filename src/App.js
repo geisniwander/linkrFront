@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Timeline from "./pages/Timeline";
 import TrendingPage from "./pages/TrendingPage";
 import 'react-tooltip/dist/react-tooltip.css';
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -18,6 +19,8 @@ function App() {
 
             <Route path="/timeline" element={<Timeline />} />
             <Route path="/hashtag/:hashtag" element={<TrendingPage />} />
+
+            <Route path="/user/:id" element={<Profile />} />
 
 
           </Routes>
