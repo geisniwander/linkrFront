@@ -8,17 +8,19 @@ import axios from "axios";
 import AppContext from "../AppContext/Context";
 import { Tooltip } from 'react-tooltip';
 import { useRef } from "react";
+import Modal from 'styled-react-modal';
 
 export default function Post({ p, name, atualiza }) {
 
     const navigate = useNavigate();
     const { token } = useContext(AppContext);
     const [likes, setLikes] = useState([])
-    const [ edit, setEdit ] = useState(p.text)
+    const [edit, setEdit] = useState(p.text)
     const liked = likes.filter(l => l.username === name)
     const [clicado, setClicado] = useState(false);
     const [desabilitado, setDesabilitado] = useState(false);
-
+    const [modalIsOpen, setIsOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
     const nameRef = useRef();
 
     useEffect(() => {
@@ -69,33 +71,43 @@ export default function Post({ p, name, atualiza }) {
 
         return `<span data-test="tooltip">${message}</span>`
 
-    } 
+    }
     function onKeyPressed(e) {
-        if(e.keyCode === 27){
+        if (e.keyCode === 27) {
             setEdit(p.text)
             setClicado(false)
         }
-        if(e.keyCode === 13){
+        if (e.keyCode === 13) {
             setDesabilitado(true)
-            const requisicao = axios.put(`${process.env.REACT_APP_API_URL}/publish`, {post_id: p.post_id, description: edit}, { headers: { 'Authorization': `Bearer ${token}` } });
-            requisicao.then((res) => { setClicado(false); setDesabilitado(false); atualiza()});
-            requisicao.catch((res) => { alert(res.response.data); setDesabilitado(false);});
+            const requisicao = axios.put(`${process.env.REACT_APP_API_URL}/publish`, { post_id: p.post_id, description: edit }, { headers: { 'Authorization': `Bearer ${token}` } });
+            requisicao.then((res) => { setClicado(false); setDesabilitado(false); atualiza() });
+            requisicao.catch((res) => { alert(res.response.data); setDesabilitado(false); });
         }
+    }
+
+    function toggleModal(e) {
+        setIsOpen(!modalIsOpen)
+    }
+    function deletePublish() {
+        setLoading(true)
+        const requisicao = axios.delete(`${process.env.REACT_APP_API_URL}/publish/${p.post_id}`, { headers: { 'Authorization': `Bearer ${token}` } });
+        requisicao.then((res) => { setLoading(false); setIsOpen(!modalIsOpen); atualiza() });
+        requisicao.catch((res) => { alert(res.response.data); setIsOpen(!modalIsOpen); });
     }
     return (
         <PostContainer clicado={clicado} data-test="post">
             <AvatarLikeContainer>
                 <ImageAvatar src={p.picture_url} alt={"avatar"} />
-                {liked.length === 0 ? <AiOutlineHeart onClick={() => postlike(p)} data-test="like-btn" /> : <AiFillHeartStyled onClick={() => removelike(p)} data-test="like-btn"/>}
+                {liked.length === 0 ? <AiOutlineHeart onClick={() => postlike(p)} data-test="like-btn" /> : <AiFillHeartStyled onClick={() => removelike(p)} data-test="like-btn" />}
                 <p data-tooltip-id="my-tooltip" data-tooltip-html={likes.length === 0 ? `<span data-test="tooltip"> Ninguém curtiu </span>` : names()} data-test="counter">{likes.length} likes</p>
                 <ReactTooltipStyled id="my-tooltip" data-test="tooltip" isOpen={true} />
             </AvatarLikeContainer>
             <div>
                 <PostHeaderContainer myPost={p.username === name}>
-                    <h4 data-test="username" onClick={e => {e.preventDefault(); navigate(`/user/${p.user_id}`)}}>{p.username}</h4>
+                    <h4 data-test="username" onClick={e => { e.preventDefault(); navigate(`/user/${p.user_id}`) }}>{p.username}</h4>
                     <div>
-                        <TiPencilStyled onClick={() => {setDesabilitado(false); setClicado(!clicado); setEdit(p.text)} } data-test="edit-btn"/>
-                        <AiFillDelete />
+                        <TiPencilStyled onClick={() => { setDesabilitado(false); setClicado(!clicado); setEdit(p.text) }} data-test="edit-btn" />
+                        <AiFillDelete onClick={() => setIsOpen(!modalIsOpen)} data-test="delete-btn"/>
                     </div>
                 </PostHeaderContainer>
                 <h5 data-test="description">
@@ -106,7 +118,7 @@ export default function Post({ p, name, atualiza }) {
                         {p.text}
                     </ReactTagify>
                 </h5>
-                <Description disabled={desabilitado} ref={nameRef} clicado={clicado} type="text" value={edit} onChange={e => setEdit(e.target.value)} onKeyDown={onKeyPressed} data-test="edit-input"/>
+                <Description disabled={desabilitado} ref={nameRef} clicado={clicado} type="text" value={edit} onChange={e => setEdit(e.target.value)} onKeyDown={onKeyPressed} data-test="edit-input" />
                 <LinkContainer href={p.url} target="_blank" data-test="link" >
                     <div>
                         <h1>{p.title}</h1>
@@ -116,10 +128,37 @@ export default function Post({ p, name, atualiza }) {
                     <ImageLink src={p.image} />
                 </LinkContainer>
             </div>
+            <StyledModal
+                isOpen={modalIsOpen}
+                onBackgroundClick={toggleModal}
+                onEscapeKeydown={toggleModal}>
+                <Loading loading={loading}>Loading...</Loading>
+                <ModalContainer loading={loading}>
+                    <TitleModal>Are you sure you want<br />to delete this post?</TitleModal>
+                    <div>
+                        <ButtonCancel onClick={toggleModal} data-test="cancel">No, go back</ButtonCancel>
+                        <ButtonConfirm onClick={deletePublish} data-test="confirm">Yes, delete it</ButtonConfirm>
+                    </div>
+                </ModalContainer>
+
+            </StyledModal>
         </PostContainer>
     )
 }
-
+const Loading = styled.div`
+    display: ${props => props.loading ? "flex" : "none"};
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    color: #FFFFFF;
+    font-size: 30px;
+    text-align: center;
+`;
+const ModalContainer = styled.div`
+    display: ${props => !props.loading ? "flex" : "none"};
+    flex-direction: column;
+    align-items: center;
+`;
 const ReactTooltipStyled = styled(Tooltip)`
     padding: 5px;
     background: rgba(255, 255, 255, 0.9);
@@ -305,4 +344,56 @@ const ImageAvatar = styled.img`
         width: 40px;
         height: 40px;
     }
+`;
+
+const StyledModal = Modal.styled`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 597px;
+    height: 262px;
+    background-color: #333333;
+    border-radius: 50px;
+`
+
+const TitleModal = styled.span`
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 34px;
+    line-height: 41px;
+    text-align: center;
+    color: #FFFFFF;
+    margin-bottom: 40px;
+`;
+
+const ButtonCancel = styled.button`
+    width: 134px;
+    height: 37px;
+    background-color: #FFFFFF;
+    border-radius: 5px;
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 22px;
+    color: #1877F2;
+    margin-right: 15px;
+    border: none;
+`;
+
+const ButtonConfirm = styled.button`
+    width: 134px;
+    height: 37px;
+    background-color: #1877F2;
+    border-radius: 5px;
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 22px;
+    color: #FFFFFF;
+    border: none;
+    margin-left: 15px;
 `;
