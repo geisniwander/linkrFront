@@ -1,13 +1,19 @@
 import styled from "styled-components";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import AppContext from "../AppContext/Context";
+import { useNavigate } from "react-router-dom";
 
 export default function SearchInput({ avatar }) {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [users, setUsers] = useState("");
   const [loading, setLoading] = useState(false);
   const { token } = useContext(AppContext);
+  const [showSearchContainer, setShowSearchContainer] = useState(false);
+  const searchContainerRef = useRef(null);
+  const [clicked, setClicked] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
     if (username.length >= 3) {
@@ -22,7 +28,31 @@ export default function SearchInput({ avatar }) {
     } else {
       setUsers([]);
     }
+    function handleClickOutside(event) {
+      if (
+        searchContainerRef.current &&
+        !searchContainerRef.current.contains(event.target)
+      ) {
+        setUsers([]);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, [token, username]);
+
+  useEffect(() => {
+    if (clicked && selectedUser !== null) {
+      setUsername("");
+      navigate(`/user/${selectedUser}`);
+      setShowSearchContainer(false);
+      setClicked(false);
+      setSelectedUser(null);
+      setUsername("");
+    }
+  }, [clicked, selectedUser, navigate]);
 
   return (
     <Container>
@@ -34,6 +64,11 @@ export default function SearchInput({ avatar }) {
           onChange={(e) => setUsername(e.target.value)}
           disabled={loading}
           data-test="search"
+          onClick={(e) => {
+            e.preventDefault();
+            setShowSearchContainer(true);
+          }}
+          onBlur={() => setShowSearchContainer(false)}
           required
         />
         <SearchIcon>
@@ -42,13 +77,22 @@ export default function SearchInput({ avatar }) {
         </SearchIcon>
       </InputContainer>
       {users.length > 0 && (
-        <SearchContainer>
+        <SearchContainer
+          id="search-container"
+          showSearchContainer={showSearchContainer}
+        >
           {users.map((user) => (
-            <UserContainer
-              data-test="user-search"
-            >
+            <UserContainer data-test="user-search">
               <img src={user.picture_url} />
-              <h1>{user.username}</h1>
+              <h1
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  setClicked(true);
+                  setSelectedUser(user.id);
+                }}
+              >
+                {user.username}
+              </h1>
             </UserContainer>
           ))}
         </SearchContainer>
@@ -83,6 +127,10 @@ const SearchContainer = styled.div`
   background: #ffffff;
   border-radius: 5px;
   overflow-y: scroll;
+  h1 {
+    cursor: pointer;
+  }
+  display: ${(props) => (props.showSearchContainer ? "block" : "none")};
 `;
 
 const UserContainer = styled.div`
