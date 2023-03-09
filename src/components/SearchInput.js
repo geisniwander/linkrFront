@@ -63,13 +63,13 @@ export default function SearchInput({ avatar }) {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           disabled={loading}
-          data-test="search"
           onClick={(e) => {
             e.preventDefault();
             setShowSearchContainer(true);
           }}
           onBlur={() => setShowSearchContainer(false)}
           required
+          data-test="search"
         />
         <SearchIcon>
           {" "}
@@ -82,15 +82,15 @@ export default function SearchInput({ avatar }) {
           showSearchContainer={showSearchContainer}
         >
           {users.map((user) => (
-            <UserContainer data-test="user-search">
+            <UserContainer
+            onMouseDown={(e) => {
+              e.preventDefault();
+              setClicked(true);
+              setSelectedUser(user.id);
+            }}
+             data-test="user-search">
               <img src={user.picture_url} />
-              <h1
-                onMouseDown={(e) => {
-                  e.preventDefault();
-                  setClicked(true);
-                  setSelectedUser(user.id);
-                }}
-              >
+              <h1>
                 {user.username}
               </h1>
             </UserContainer>
@@ -156,6 +156,7 @@ const UserContainer = styled.div`
   font-size: 20px;
   line-height: 24px;
   color: #707070;
+  cursor: pointer;
   img {
     border-radius: 50%;
     object-fit: cover;
