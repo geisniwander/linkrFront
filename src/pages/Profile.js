@@ -26,7 +26,6 @@ export default function Profile() {
       );
       requisicaoAvatar.then((res) => {
         setAvatar(res.data.picture_url);
-        setLoading(false);
       });
       requisicaoAvatar.catch((res) => {
         alert(res.response.data);
@@ -59,14 +58,13 @@ export default function Profile() {
   }, [token, navigate]);
 
   function atualiza() {
-    setLoading(true);
+    //setLoading(true);
     const requisicaoAvatar = axios.get(
       `${process.env.REACT_APP_API_URL}/avatar`,
       { headers: { Authorization: `Bearer ${token}` } }
     );
     requisicaoAvatar.then((res) => {
       setAvatar(res.data.user.picture_url);
-      setLoading(false);
     });
     requisicaoAvatar.catch((res) => {
       alert(res.response.data);
