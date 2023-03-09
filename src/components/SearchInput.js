@@ -33,7 +33,7 @@ export default function SearchInput({ avatar }) {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           disabled={loading}
-          data-test="registry-name-input"
+          data-test="search"
           required
         />
         <SearchIcon>
@@ -44,7 +44,9 @@ export default function SearchInput({ avatar }) {
       {users.length > 0 && (
         <SearchContainer>
           {users.map((user) => (
-            <UserContainer>
+            <UserContainer
+              data-test="user-search"
+            >
               <img src={user.picture_url} />
               <h1>{user.username}</h1>
             </UserContainer>

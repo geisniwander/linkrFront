@@ -57,7 +57,7 @@ export default function Feed({ posts, name }) {
             }
         }
 
-        return message
+        return `<span data-test="tooltip">${message}</span>`
         
     }
     return (
@@ -73,8 +73,8 @@ export default function Feed({ posts, name }) {
                         <AvatarLikeContainer>
                             <ImageAvatar src={p.picture_url} alt={"avatar"} />
                             {liked.length === 0 ? <AiOutlineHeart onClick={() => postlike(p)} data-test="like-btn"/> : <span onClick={() => removelike(p)} data-test="like-btn"><AiFillHeart/></span>}
-                            <p data-tooltip-id="my-tooltip" data-tooltip-content={quantLikes.length === 0 ? "Ninguém curtiu" : names(quantLikes, liked)} data-test="counter">{quantLikes.length} likes</p>
-                            <ReactTooltipStyled id="my-tooltip" data-test="tooltip"/>
+                            <p data-tooltip-id="my-tooltip" data-tooltip-html={quantLikes.length === 0 ? `<span data-test="tooltip"> Ninguém curtiu </span>` : names(quantLikes, liked)} data-test="counter">{quantLikes.length} likes</p>
+                            <ReactTooltipStyled id="my-tooltip" data-test="tooltip" isOpen={true}/>
                         </AvatarLikeContainer>
                         <ConteudoContainer>
                             <h4 data-test="username">{p.username}</h4>
@@ -86,7 +86,7 @@ export default function Feed({ posts, name }) {
                                     {p.text}
                                 </ReactTagify>
                             </h5>
-                            <LinkContainer onClick={() => window.open(p.url)} data-test="link" >
+                            <LinkContainer href={p.url} target="_blank" data-test="link" >
                                 <div>
                                     <h1>{p.title}</h1>
                                     <h2>{p.description}</h2>
@@ -200,7 +200,7 @@ const Post = styled.div`
     }
 `;
 
-const LinkContainer = styled.div`
+const LinkContainer = styled.a`
     width: 503px;
     min-height: 155px;
     border: 1px solid #4D4D4D;

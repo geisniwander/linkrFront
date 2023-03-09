@@ -30,11 +30,11 @@ export default function Header ({ avatar }) {
                     <IconUp clicado={clicado}>
                         <SlArrowUp/> 
                     </IconUp>
-                    <img src={avatar} alt="Avatar"/>
+                    <img src={avatar} alt="Avatar" data-test="avatar"/>
                 </Avatar>
             </HeaderContainer>
-            <Logout clicado={clicado} onClick={logout}>
-                Logout
+            <Logout clicado={clicado} data-test="menu">
+                <button onClick={logout} data-test="logout">Logout</button>
             </Logout>
         </>
         
@@ -106,16 +106,20 @@ const Logout = styled.div`
     background-color: #171717;
     width: 133px;
     height: 47px;
-    color: #FFFFFF;
     border-bottom-left-radius: 20px;
     align-items: center;
-    justify-content: center;
-    font-family: 'Lato';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 17px;
-    line-height: 20px;
-    letter-spacing: 0.05em;
+    justify-content: center;   
+    button{
+        background-color: rgba(0,0,0,0);
+        color: #FFFFFF;
+        border: none;
+        font-family: 'Lato';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 17px;
+        line-height: 20px;
+        letter-spacing: 0.05em;
+    }
     @media (max-width: 375px) {
         width: 130px;
         font-size: 15px;
