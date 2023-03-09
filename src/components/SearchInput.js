@@ -102,11 +102,13 @@ export default function SearchInput({ avatar }) {
 }
 
 const Container = styled.div`
-  width: 35%;
+  width: 95%;
   min-height: 45px;
   align-items: center;
   background: #ffffff;
   border-radius: 5px;
+  display:flex;
+  flex-direction:column;
 `;
 
 const InputContainer = styled.div`
@@ -119,18 +121,22 @@ const InputContainer = styled.div`
 `;
 
 const SearchContainer = styled.div`
-  width: 35%;
+  width: 38%;
   max-height: 310px;
-  position: fixed;
-  top: 50px;
   align-items: center;
   background: #ffffff;
   border-radius: 5px;
   overflow-y: scroll;
+  position:fixed;
+  top:45px;
   h1 {
     cursor: pointer;
   }
   display: ${(props) => (props.showSearchContainer ? "block" : "none")};
+  @media (max-width: 650px) {
+    top:130px;
+    width:86%;
+}
 `;
 
 const UserContainer = styled.div`
