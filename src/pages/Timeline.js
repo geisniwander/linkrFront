@@ -58,7 +58,7 @@ export default function Timeline () {
                 <TimelineContainer>
                     <Title>timeline</Title>
                     <Publish  avatar={avatar} atualiza={atualiza} addPost={addPost}/>
-                    { loading ? <Loading>Loading...</Loading>  : <Feed posts={posts} name={name}/>} 
+                    { loading ? <Loading>Loading...</Loading>  : <Feed posts={posts} name={name} atualiza={atualiza}/>} 
                 </TimelineContainer>
                 <HashtagBoxContainer>
                     <HashtagBox hashtags={hashtags} />
