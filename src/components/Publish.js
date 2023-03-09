@@ -3,17 +3,21 @@ import { useContext, useState } from "react"
 import AppContext from "../AppContext/Context";
 import axios from "axios";
 
-export default function Publish ({avatar, atualiza}) {
+export default function Publish ({avatar, atualiza, addPost}) {
     const [clicado, setClicado] = useState(false);
     const [publish, setPublish] = useState({ link: "", description: "" });
     const { token } = useContext(AppContext);
     
     function salvar(event) {
         event.preventDefault();
+        adicionarPost();
         setClicado(true);
         const requisicao = axios.post(`${process.env.REACT_APP_API_URL}/publish`, publish, { headers: { 'Authorization': `Bearer ${token}` } });
         requisicao.then(() => {setPublish({ link: "", description: "" });setClicado(false);atualiza();});
         requisicao.catch((res) => { alert("There was an error publishing your link"); setClicado(false); });
+    }
+    function adicionarPost(){
+        addPost(publish);
     }
     return (
         <PublishContainer data-test="publish-box">

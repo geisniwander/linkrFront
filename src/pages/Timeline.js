@@ -41,10 +41,14 @@ export default function Timeline () {
     }, [ token, navigate ]);
 
     function atualiza(){
-        setLoading(true)
+        // setLoading(true)
         const requisicao = axios.get(`${process.env.REACT_APP_API_URL}/timeline`, { headers: { 'Authorization': `Bearer ${token}` } });
         requisicao.then((res) => {setPosts(res.data);setLoading(false)});
         requisicao.catch((res) => { alert("An error occured while trying to fetch the posts, please refresh the page"); });
+    }
+
+    function addPost(post){
+        setPosts([post, ...posts])
     }
 
     return (
@@ -53,7 +57,7 @@ export default function Timeline () {
             <BodyContainer>
                 <TimelineContainer>
                     <Title>timeline</Title>
-                    <Publish  avatar={avatar} atualiza={atualiza}/>
+                    <Publish  avatar={avatar} atualiza={atualiza} addPost={addPost}/>
                     { loading ? <Loading>Loading...</Loading>  : <Feed posts={posts} name={name}/>} 
                 </TimelineContainer>
                 <HashtagBoxContainer>
