@@ -86,7 +86,7 @@ export default function Feed({ posts, name }) {
                                     {p.text}
                                 </ReactTagify>
                             </h5>
-                            <LinkContainer onClick={() => window.open(p.url)} data-test="link" >
+                            <LinkContainer href={p.url} target="_blank" data-test="link" >
                                 <div>
                                     <h1>{p.title}</h1>
                                     <h2>{p.description}</h2>
@@ -200,7 +200,7 @@ const Post = styled.div`
     }
 `;
 
-const LinkContainer = styled.div`
+const LinkContainer = styled.a`
     width: 503px;
     min-height: 155px;
     border: 1px solid #4D4D4D;
