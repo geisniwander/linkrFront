@@ -27,11 +27,14 @@ export default function Post({ p, name, atualiza }) {
         if (clicado) {
             nameRef.current.focus();
         }
-        const requisicaoLikes = axios.get(`${process.env.REACT_APP_API_URL}/likes/${p.post_id}`, { headers: { 'Authorization': `Bearer ${token}` } });
-        requisicaoLikes.then((res) => { setLikes(res.data) });
-        requisicaoLikes.catch((res) => { alert(res.response.data); });
-
-    }, [token, setLikes, clicado]);
+        if (p.post_id) {
+            const requisicaoLikes = axios.get(`${process.env.REACT_APP_API_URL}/likes/${p.post_id}`, { headers: { 'Authorization': `Bearer ${token}` } });
+            requisicaoLikes.then((res) => { setLikes(res.data) });
+            requisicaoLikes.catch((res) => { alert(res.response.data); });
+        }else{
+            setLikes([])
+        }
+    }, [token, setLikes, clicado, p]);
 
     function atualizaLikes() {
         const requisicaoLikes = axios.get(`${process.env.REACT_APP_API_URL}/likes/${p.post_id}`, { headers: { 'Authorization': `Bearer ${token}` } });
@@ -107,7 +110,7 @@ export default function Post({ p, name, atualiza }) {
                     <h4 data-test="username" onClick={e => { e.preventDefault(); navigate(`/user/${p.user_id}`) }}>{p.username}</h4>
                     <div>
                         <TiPencilStyled onClick={() => { setDesabilitado(false); setClicado(!clicado); setEdit(p.text) }} data-test="edit-btn" />
-                        <AiFillDelete onClick={() => setIsOpen(!modalIsOpen)} data-test="delete-btn"/>
+                        <AiFillDelete onClick={() => setIsOpen(!modalIsOpen)} data-test="delete-btn" />
                     </div>
                 </PostHeaderContainer>
                 <h5 data-test="description">
