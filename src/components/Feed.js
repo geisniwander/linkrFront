@@ -73,7 +73,7 @@ export default function Feed({ posts, name }) {
                         <AvatarLikeContainer>
                             <ImageAvatar src={p.picture_url} alt={"avatar"} />
                             {liked.length === 0 ? <AiOutlineHeart onClick={() => postlike(p)} data-test="like-btn"/> : <span onClick={() => removelike(p)} data-test="like-btn"><AiFillHeart/></span>}
-                            <p data-tooltip-id="my-tooltip" data-tooltip-html={quantLikes.length === 0 ? "Ninguém curtiu" : names(quantLikes, liked)} data-test="counter">{quantLikes.length} likes</p>
+                            <p data-tooltip-id="my-tooltip" data-tooltip-html={quantLikes.length === 0 ? `<span data-test="tooltip"> Ninguém curtiu </span>` : names(quantLikes, liked)} data-test="counter">{quantLikes.length} likes</p>
                             <ReactTooltipStyled id="my-tooltip" data-test="tooltip"/>
                         </AvatarLikeContainer>
                         <ConteudoContainer>
