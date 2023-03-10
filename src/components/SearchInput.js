@@ -75,18 +75,18 @@ export default function SearchInput({ avatar }) {
           id="search-container"
         >
           {users.map((user) => (
-            <UserContainer data-test="user-search">
+            <UserContainer data-test="user-search" href={`/user/${user.id}`}>
               <img src={user.picture_url} />
-              <a
+              <h1
                 // onMouseDown={(e) => {
                 //   e.preventDefault();
                 //   setClicked(true);
                 //   setSelectedUser(user.id);
                 // }}
-                href={`/user/${user.id}`}
+                
               >
                 {user.username}
-              </a>
+              </h1>
             </UserContainer>
           ))}
         </SearchContainer>
@@ -132,7 +132,7 @@ const SearchContainer = styled.div`
 }
 `;
 
-const UserContainer = styled.div`
+const UserContainer = styled.a`
   width: 100%;
   height: 70px;
   display: flex;
@@ -149,10 +149,8 @@ const UserContainer = styled.div`
   font-size: 20px;
   line-height: 24px;
   color: #707070;
-  a {
-    color: black;
-    text-decoration: none;
-  }
+  text-decoration: none;
+  
   img {
     border-radius: 50%;
     object-fit: cover;
