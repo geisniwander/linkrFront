@@ -10,7 +10,6 @@ export default function SearchInput({ avatar }) {
   const [users, setUsers] = useState("");
   const [loading, setLoading] = useState(false);
   const { token } = useContext(AppContext);
-  const [showSearchContainer, setShowSearchContainer] = useState(false);
   const searchContainerRef = useRef(null);
   const [clicked, setClicked] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -77,14 +76,7 @@ export default function SearchInput({ avatar }) {
           {users.map((user) => (
             <UserContainer data-test="user-search" href={`/user/${user.id}`}>
               <img src={user.picture_url} />
-              <h1
-                // onMouseDown={(e) => {
-                //   e.preventDefault();
-                //   setClicked(true);
-                //   setSelectedUser(user.id);
-                // }}
-                
-              >
+              <h1>
                 {user.username}
               </h1>
             </UserContainer>
