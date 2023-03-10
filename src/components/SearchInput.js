@@ -10,7 +10,6 @@ export default function SearchInput({ avatar }) {
   const [users, setUsers] = useState("");
   const [loading, setLoading] = useState(false);
   const { token } = useContext(AppContext);
-  const [showSearchContainer, setShowSearchContainer] = useState(false);
   const searchContainerRef = useRef(null);
   const [clicked, setClicked] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -47,7 +46,6 @@ export default function SearchInput({ avatar }) {
     if (clicked && selectedUser !== null) {
       setUsername("");
       navigate(`/user/${selectedUser}`);
-      setShowSearchContainer(false);
       setClicked(false);
       setSelectedUser(null);
       setUsername("");
@@ -63,13 +61,8 @@ export default function SearchInput({ avatar }) {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           disabled={loading}
-          onClick={(e) => {
-            e.preventDefault();
-            setShowSearchContainer(true);
-          }}
-          onBlur={() => setShowSearchContainer(false)}
-          required
           data-test="search"
+          required
         />
         <SearchIcon>
           {" "}
@@ -79,16 +72,9 @@ export default function SearchInput({ avatar }) {
       {users.length > 0 && (
         <SearchContainer
           id="search-container"
-          showSearchContainer={showSearchContainer}
         >
           {users.map((user) => (
-            <UserContainer
-            onMouseDown={(e) => {
-              e.preventDefault();
-              setClicked(true);
-              setSelectedUser(user.id);
-            }}
-             data-test="user-search">
+            <UserContainer data-test="user-search" href={`/user/${user.id}`}>
               <img src={user.picture_url} />
               <h1>
                 {user.username}
@@ -132,14 +118,13 @@ const SearchContainer = styled.div`
   h1 {
     cursor: pointer;
   }
-  display: ${(props) => (props.showSearchContainer ? "block" : "none")};
   @media (max-width: 650px) {
     top:130px;
     width:86%;
 }
 `;
 
-const UserContainer = styled.div`
+const UserContainer = styled.a`
   width: 100%;
   height: 70px;
   display: flex;
@@ -156,7 +141,8 @@ const UserContainer = styled.div`
   font-size: 20px;
   line-height: 24px;
   color: #707070;
-  cursor: pointer;
+  text-decoration: none;
+  
   img {
     border-radius: 50%;
     object-fit: cover;
