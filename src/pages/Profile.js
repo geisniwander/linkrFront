@@ -14,6 +14,7 @@ export default function Profile() {
   const [avatar, setAvatar] = useState();
   const [avatarProfile, setAvatarProfile] = useState();
   const [name, setName] = useState();
+  const [userName, setUserName] = useState();
   const [posts, setPosts] = useState([]);
   const [hashtags, setHashtags] = useState([]);
   const { id } = useParams();
@@ -27,6 +28,7 @@ export default function Profile() {
       );
       requisicaoAvatar.then((res) => {
         setAvatar(res.data.picture_url);
+        setUserName(res.data.username)
       });
       requisicaoAvatar.catch((res) => {
         alert(res.response.data);
@@ -85,7 +87,7 @@ export default function Profile() {
           {loading ? (
             <Loading>Loading...</Loading>
           ) : (
-            <Feed posts={posts} name={name} atualiza={atualiza}/>
+            <Feed posts={posts} name={userName} atualiza={atualiza}/>
           )}
         </TimelineContainer>
         <HashtagBoxContainer>
