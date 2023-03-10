@@ -57,21 +57,10 @@ export default function Profile() {
     } else {
       navigate("/");
     }
-  }, [token, navigate]);
+  }, [token, navigate, config, id]);
 
   function atualiza() {
     //setLoading(true);
-    const requisicaoAvatar = axios.get(
-      `${process.env.REACT_APP_API_URL}/avatar`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    requisicaoAvatar.then((res) => {
-      setAvatar(res.data.user.picture_url);
-    });
-    requisicaoAvatar.catch((res) => {
-      alert(res.response.data);
-    });
-
     const requisicaoProfile = axios.get(
       `${process.env.REACT_APP_API_URL}/user/${id}`,
       { headers: { Authorization: `Bearer ${token}` } }
@@ -91,12 +80,12 @@ export default function Profile() {
       <Header avatar={avatar} />
       <BodyContainer>
         <TimelineContainer>
-          <Title> <img src={avatarProfile}/> {name}'s posts</Title>
+          <Title> <img src={avatarProfile} alt=""/> {name}'s posts</Title>
 
           {loading ? (
             <Loading>Loading...</Loading>
           ) : (
-            <Feed posts={posts} name={name} />
+            <Feed posts={posts} name={name} atualiza={atualiza}/>
           )}
         </TimelineContainer>
         <HashtagBoxContainer>

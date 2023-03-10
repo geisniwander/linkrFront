@@ -221,6 +221,7 @@ const PostContainer = styled.div`
     color: #FFFFFF;
     display: flex;
     padding: 19px;
+    word-break: break-all;
     @media (max-width: 650px) {
         border-radius: 0px;
         min-height: 232px;

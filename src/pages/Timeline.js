@@ -20,11 +20,11 @@ export default function Timeline () {
     useEffect(() => {
         if (token) {
 
-            const requisicaoAvatar = axios.get(`${process.env.REACT_APP_API_URL}/avatar`, { headers: { 'Authorization': `Bearer ${token}` } });
+            const requisicaoAvatar = axios.get(`${process.env.REACT_APP_API_URL}/avatar`, config);
             requisicaoAvatar.then((res) => {setAvatar(res.data.picture_url); setName(res.data.username)});
             requisicaoAvatar.catch((res) => { alert(res.response.data); });
 
-            const requisicaoPosts = axios.get(`${process.env.REACT_APP_API_URL}/timeline`, { headers: { 'Authorization': `Bearer ${token}` } });
+            const requisicaoPosts = axios.get(`${process.env.REACT_APP_API_URL}/timeline`, config);
             requisicaoPosts.then((res) => {setPosts(res.data);setLoading(false)});
             requisicaoPosts.catch((res) => { alert("An error occured while trying to fetch the posts, please refresh the page"); });
             
@@ -38,7 +38,7 @@ export default function Timeline () {
         }else{
             navigate("/");
         }
-    }, [ token, navigate ]);
+    }, [ token, navigate, config ]);
 
     function atualiza(){
         // setLoading(true)
