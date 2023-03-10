@@ -1,14 +1,12 @@
 import styled from "styled-components";
-import { SlArrowDown, SlArrowUp } from "react-icons/sl"
-import { useContext, useState } from "react"
-import { useNavigate } from "react-router-dom";
+import { SlArrowDown, SlArrowUp } from "react-icons/sl";
+import { useContext, useState } from "react";
 import AppContext from "../AppContext/Context";
 import SearchInput from "./SearchInput";
 
-export default function Header ({ avatar }) {
-    const [clicado, setClicado] = useState(true)
-    const {data, setData} = useContext(AppContext)
-    const navigate = useNavigate();
+export default function Header({ avatar }) {
+    const [clicado, setClicado] = useState(true);
+    const { setData } = useContext(AppContext);
 
     function logout() {
         localStorage.removeItem("token");
@@ -23,27 +21,26 @@ export default function Header ({ avatar }) {
                     linkr
                 </Logo>
                 <InputDesktop>
-                    <SearchInput/>
+                    <SearchInput />
                 </InputDesktop>
                 <Avatar onClick={() => setClicado(!clicado)}>
                     <IconDown clicado={clicado}>
-                        <SlArrowDown/> 
+                        <SlArrowDown />
                     </IconDown>
                     <IconUp clicado={clicado}>
-                        <SlArrowUp/> 
+                        <SlArrowUp />
                     </IconUp>
-                    <img src={avatar} alt="Avatar" data-test="avatar"/>
+                    <img src={avatar} alt="Avatar" data-test="avatar" />
                 </Avatar>
             </HeaderContainer>
             <Logout clicado={clicado} data-test="menu">
                 <button onClick={logout} data-test="logout">Logout</button>
             </Logout>
             <InputMobile>
-                    <SearchInput/>
+                <SearchInput />
             </InputMobile>
         </>
-        
-    )
+    );
 }
 
 const HeaderContainer = styled.div`

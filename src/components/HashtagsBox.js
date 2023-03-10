@@ -6,7 +6,7 @@ export default function HashtagBox({ hashtags }) {
     <StyledBox data-test="trending">
       <h2>trending</h2>
       {hashtags.map((name) => (
-        <Link data-test="hashtag" to={`/hashtag/${name}`}>
+        <Link key={name} data-test="hashtag" to={`/hashtag/${name}`}>
           #{name}
         </Link>
       ))}
