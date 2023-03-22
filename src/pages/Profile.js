@@ -17,6 +17,7 @@ export default function Profile() {
   const [userName, setUserName] = useState();
   const [posts, setPosts] = useState([]);
   const [hashtags, setHashtags] = useState([]);
+  const [ following, setFollowing ] = useState(false);
   const { id } = useParams();
 
   useEffect(() => {
@@ -78,9 +79,39 @@ export default function Profile() {
   }
 
   function follow(){
-    // setLoading(true);
-    // const requisicao = axios.get
-  }
+    setLoading(true);
+    const requisicao = axios.get(
+      `${process.env.REACT_APP_API_URL}/user/${id}/follow`,
+      { headers: { Authorization: `Bearer ${token}`}}
+    );
+    requisicao.then((res) => {
+      setFollowing(true);
+      setLoading(false);
+    });
+    requisicao.catch((error) => {
+      alert("Something went wrong, please try again!");
+      setLoading(false);
+    })
+  } 
+
+  function unfollow(){
+    setLoading(true);
+    const requisicao = axios.get(
+      `${process.env.REACT_APP_API_URL}/user/${id}/unfollow`,
+      { headers: { Authorization: `Bearer ${token}`}}
+    );
+    requisicao.then((res) => {
+      setFollowing(false);
+      setLoading(false);
+    });
+    requisicao.catch((error) => {
+      alert("Something went wrong, please try again!");
+      setLoading(false);
+    })
+  } 
+
+
+
   return (
     <HomeContainer>
       <Header avatar={avatar} />
