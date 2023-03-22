@@ -77,6 +77,10 @@ export default function Profile() {
     });
   }
 
+  function follow(){
+    // setLoading(true);
+    // const requisicao = axios.get
+  }
   return (
     <HomeContainer>
       <Header avatar={avatar} />
