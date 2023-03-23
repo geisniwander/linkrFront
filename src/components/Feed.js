@@ -12,7 +12,7 @@ export default function Feed({ posts, name, atualiza }) {
 
 const FeedContainer = styled.div`
     width: 100%;
-    margin-top: 29px;
+    margin-top: 70px;
 `;
 
 const Mensage = styled.h3`
