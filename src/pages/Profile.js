@@ -19,6 +19,7 @@ export default function Profile() {
   const [hashtags, setHashtags] = useState([]);
   const [ follow, setFollow ] = useState(false);
   const [ disabled, setDisabled ] = useState(false);
+  const [button, setButton] = useState(false);
   const { data } = useContext(AppContext);
   const { id } = useParams();
 
@@ -69,6 +70,18 @@ export default function Profile() {
         setLoading(false);
       })
 
+      const requisicaoButton = axios.get(
+        `${process.env.REACT_APP_API_URL}/user/${id}/showbutton`,
+        {headers:{ Authorization: `Bearer ${token}`}}
+        );
+        requisicaoButton.then((res) => {
+          setButton(res.data);
+          
+        })
+        requisicaoButton.catch((err) => {
+          console.log(err.message);
+          alert("Error loading button")
+        })
 
       axios
         .get(`${process.env.REACT_APP_API_URL}/hashtags`, config)
@@ -81,7 +94,7 @@ export default function Profile() {
     } else {
       navigate("/");
     }
-  }, [token, navigate, config, id]);
+  }, [token, navigate, config, id, button, follow]);
 
   function atualiza() {
     //setLoading(true);
@@ -133,7 +146,7 @@ export default function Profile() {
         <TimelineContainer>
           <TitleWrapper>
           <Title> <img src={avatarProfile} alt=""/> {name}'s posts</Title>
-        <FollowButton follow={follow} loading={loading} onClick={following}>{follow ? "Follow" : "Unfollow"}</FollowButton>
+          {button ? <FollowButton follow={follow} loading={loading} onClick={following}>{follow ? "Follow" : "Unfollow"}</FollowButton> : null}
           
           
           
