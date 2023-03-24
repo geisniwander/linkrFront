@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import Publish from "../components/Publish";
 import Feed from "../components/Feed";
 import HashtagBox from "../components/HashtagsBox";
+import useInterval from "use-interval"
+import {GrUpdate} from "react-icons/gr"
 
 export default function Timeline () {
     const [loading, setLoading] = useState(true)
@@ -16,6 +18,7 @@ export default function Timeline () {
     const [name, setName] = useState();
     const [posts, setPosts] = useState([]);
     const [hashtags, setHashtags] = useState([]);
+    const [newPosts, setNewPosts] = useState([]);
 
     useEffect(() => {
         if (token) {
@@ -24,7 +27,7 @@ export default function Timeline () {
             requisicaoAvatar.then((res) => {setAvatar(res.data.picture_url); setName(res.data.username)});
             requisicaoAvatar.catch((res) => { alert(res.response.data); });
 
-            const requisicaoPosts = axios.get(`${process.env.REACT_APP_API_URL}/timeline`, config);
+            const requisicaoPosts = axios.get(`${process.env.REACT_APP_API_URL}/followedposts`, config);
             requisicaoPosts.then((res) => {setPosts(res.data);setLoading(false)});
             requisicaoPosts.catch((res) => { alert("An error occured while trying to fetch the posts, please refresh the page"); });
             
@@ -42,7 +45,7 @@ export default function Timeline () {
 
     function atualiza(){
         // setLoading(true)
-        const requisicao = axios.get(`${process.env.REACT_APP_API_URL}/timeline`, { headers: { 'Authorization': `Bearer ${token}` } });
+        const requisicao = axios.get(`${process.env.REACT_APP_API_URL}/followedposts`, { headers: { 'Authorization': `Bearer ${token}` } });
         requisicao.then((res) => {setPosts(res.data);setLoading(false)});
         requisicao.catch((res) => { alert("An error occured while trying to fetch the posts, please refresh the page"); });
     }
@@ -51,6 +54,22 @@ export default function Timeline () {
         setPosts([post, ...posts])
     }
 
+    function updateNewPosts(){
+        setPosts([...newPosts, ...posts])
+        setNewPosts([]);
+    }
+
+    useInterval(async()=>{
+        const lastCurrentPost = posts.map(p=>Number(p.post_id)).reduce((p, c) => Math.max(p,c), 0);
+        try {
+            const request = await axios.get(`${process.env.REACT_APP_API_URL}/followedposts?postIdAfter=${lastCurrentPost}`, config);
+            setNewPosts(request.data)
+        } catch (error) {
+            console.log(JSON.stringify(error))
+        }
+
+    },15000)
+
     return (
         <HomeContainer>
             <Header avatar={avatar}/>
@@ -58,6 +77,9 @@ export default function Timeline () {
                 <TimelineContainer>
                     <Title>timeline</Title>
                     <Publish  avatar={avatar} atualiza={atualiza} addPost={addPost}/>
+                    {newPosts?.length > 0 && <MorePostsButton data-test="load-btn" onClick={updateNewPosts}>
+                        {newPosts.length} new posts, load more! <GrUpdate />
+                    </MorePostsButton>}
                     { loading ? <Loading>Loading...</Loading>  : <Feed posts={posts} name={name} atualiza={atualiza}/>} 
                 </TimelineContainer>
                 <HashtagBoxContainer>
@@ -115,3 +137,19 @@ const Title = styled.h1`
         margin: 19px 0px 19px 17px;
     }
 `;
+
+const MorePostsButton = styled.button`
+    margin-top: 40px;
+    width: 100%;
+    border-radius: 16px;
+    border-style: none;
+    height: 61px;
+
+    font-family: "Lato", sans-serif;
+    font-size: 16px;
+    color: white;
+    background-color: #1877F2;
+    svg path {
+        stroke: #fff;
+    }
+`
