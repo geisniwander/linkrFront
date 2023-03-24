@@ -45,11 +45,6 @@ export default function Login(){
         console.log(res.data);
         localStorage.setItem("token", res.data.token)
         setToken(res.data.token)
-
-        // const data = JSON.stringify(res.data)
-        // localStorage.setItem("data", data)
-        // setData(res.data)
-     
         navigate("/timeline");
     })
     .catch(error => {
