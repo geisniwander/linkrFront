@@ -1,10 +1,23 @@
 import styled from "styled-components";
 import Post from './Post.js'
 
-export default function Feed({ posts, name, atualiza }) {
+
+
+
+
+export default function Feed({ posts, name, atualiza, showFollows }) {
+    
+
+    console.log(showFollows)
+    
+
     return (
         <FeedContainer>
-            {(posts.length === 0) ? <Mensage data-test="message">There are no posts yet</Mensage> : posts.map(p => <Post key={p.post_id} p={p} name={name} atualiza={atualiza}/>)}
+            {(!showFollows)? <Mensage data-test="message">You don't follow anyone yet. Search for new friends!</Mensage> :(posts.length === 0) ? <Mensage data-test="message">No posts found from your friends</Mensage> : posts.map(p => <Post key={p.post_id} p={p} name={name} atualiza={atualiza}/>)} 
+             
+            
+            
+            
         </FeedContainer>
 
     )
@@ -21,3 +34,4 @@ const Mensage = styled.h3`
     text-align: center;
     margin-top: 60px;
 `;
+

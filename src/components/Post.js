@@ -22,6 +22,7 @@ export default function Post({ p, name, atualiza }) {
     const [modalIsOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const nameRef = useRef();
+    
 
     useEffect(() => {
         if (clicado) {
@@ -34,6 +35,8 @@ export default function Post({ p, name, atualiza }) {
         }else{
             setLikes([])
         }
+        
+        
     }, [token, setLikes, clicado, p]);
 
     function atualizaLikes() {
@@ -97,6 +100,8 @@ export default function Post({ p, name, atualiza }) {
         requisicao.then((res) => { setLoading(false); setIsOpen(!modalIsOpen); atualiza() });
         requisicao.catch((res) => { alert(res.response.data); setIsOpen(!modalIsOpen); });
     }
+
+    
     return (
         <PostContainer clicado={clicado} data-test="post">
             <AvatarLikeContainer>

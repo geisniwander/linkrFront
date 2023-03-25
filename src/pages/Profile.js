@@ -157,7 +157,7 @@ export default function Profile() {
           {loading ? (
             <Loading>Loading...</Loading>
           ) : (
-            <Feed posts={posts} name={userName} atualiza={atualiza}/>
+            <Feed showFollows={true} posts={posts} name={userName} atualiza={atualiza}/>
           )}
         </TimelineContainer>
         <HashtagBoxContainer>
