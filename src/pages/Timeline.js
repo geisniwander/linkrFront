@@ -50,7 +50,7 @@ export default function Timeline () {
             });
             requisicaoLikes.catch((res) => { alert(res.response.data); });
 
-    }, [ token, navigate, config, showFollows ]);
+    }, [ token, navigate, config ]);
 
     function atualiza(){
         // setLoading(true)
