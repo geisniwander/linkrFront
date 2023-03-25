@@ -85,6 +85,7 @@ export default function Post({ p, name, atualiza }) {
     );
     requisicaoLikes.then((res) => {
       setLikes(res.data);
+      atualiza();
     });
     requisicaoLikes.catch((res) => {
       alert(res.response.data);
@@ -350,6 +351,7 @@ export default function Post({ p, name, atualiza }) {
       </PostContainer>
       {openComments && (
         <Comments
+          atualiza={atualiza}
           post_id={p.post_id}
           refresh={refresh}
           setRefresh={setRefresh}
