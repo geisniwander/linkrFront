@@ -146,7 +146,7 @@ export default function Profile() {
         <TimelineContainer>
           <TitleWrapper>
           <Title> <img src={avatarProfile} alt=""/> {name}'s posts</Title>
-          {button ? <FollowButton follow={follow} loading={loading} onClick={following}>{follow ? "Follow" : "Unfollow"}</FollowButton> : null}
+          {button ? <FollowButton data-test="follow-btn" follow={follow} loading={loading} onClick={following}>{follow ? "Follow" : "Unfollow"}</FollowButton> : null}
           
           
           
@@ -157,7 +157,7 @@ export default function Profile() {
           {loading ? (
             <Loading>Loading...</Loading>
           ) : (
-            <Feed posts={posts} name={userName} atualiza={atualiza}/>
+            <Feed showFollows={true} posts={posts} name={userName} atualiza={atualiza}/>
           )}
         </TimelineContainer>
         <HashtagBoxContainer>

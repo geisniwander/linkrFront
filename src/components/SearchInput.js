@@ -76,8 +76,8 @@ export default function SearchInput({ avatar }) {
           {users.map((user) => (
             <UserContainer data-test="user-search" href={`/user/${user.id}`}>
               <img src={user.picture_url} />
-              <h1>
-                {user.username}
+              <h1> 
+                {user.username} {user.following ? <span> • following</span> : ""}
               </h1>
             </UserContainer>
           ))}
@@ -149,6 +149,9 @@ const UserContainer = styled.a`
     width: 60px;
     height: 60px;
     margin-right: 15px;
+  }
+  span {
+  color: #C5C5C5;
   }
 `;
 
