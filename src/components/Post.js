@@ -200,13 +200,17 @@ export default function Post({ p, name, atualiza }) {
             data-test="tooltip"
             isOpen={true}
           />
-          <AiOutlineComment
-            onClick={() =>
-               (openComments === false) ? setOpenComments(true) : setOpenComments(false)
-            }
-            data-test="comment-btn"
-          />
-          <p>{comments} comments</p>
+          <div data-test="comment-btn">
+            <AiOutlineComment
+              onClick={() =>
+                openComments === false
+                  ? setOpenComments(true)
+                  : setOpenComments(false)
+              }
+              data-test="comment-btn"
+            />
+          </div>
+          <p data-test="comment-counter">{comments} comments</p>
         </AvatarLikeContainer>
         <div>
           <PostHeaderContainer myPost={p.username === name}>
