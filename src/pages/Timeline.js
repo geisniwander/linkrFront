@@ -79,6 +79,11 @@ export default function Timeline () {
 
     },15000)
 
+    useEffect(()=>{
+        if (posts.length > 0)
+            setShowFollows(true);
+    }, [posts])
+
     return (
         <HomeContainer>
             <Header avatar={avatar}/>
