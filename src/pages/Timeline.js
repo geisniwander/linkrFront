@@ -19,6 +19,7 @@ export default function Timeline () {
     const [posts, setPosts] = useState([]);
     const [hashtags, setHashtags] = useState([]);
     const [newPosts, setNewPosts] = useState([]);
+    const [showFollows, setShowFollows] = useState(false);
 
     useEffect(() => {
         if (token) {
@@ -41,7 +42,15 @@ export default function Timeline () {
         }else{
             navigate("/");
         }
-    }, [ token, navigate, config ]);
+        console.log("chegou")
+            const requisicaoLikes = axios.get(`${process.env.REACT_APP_API_URL}/user/showfollows`, { headers: { 'Authorization': `Bearer ${token}` } });
+            requisicaoLikes.then((res) => { 
+                console.log(res.data)
+                setShowFollows(res.data) 
+            });
+            requisicaoLikes.catch((res) => { alert(res.response.data); });
+
+    }, [ token, navigate, config, showFollows ]);
 
     function atualiza(){
         // setLoading(true)
@@ -80,7 +89,7 @@ export default function Timeline () {
                     {newPosts?.length > 0 && <MorePostsButton data-test="load-btn" onClick={updateNewPosts}>
                         {newPosts.length} new posts, load more! <GrUpdate />
                     </MorePostsButton>}
-                    { loading ? <Loading>Loading...</Loading>  : <Feed posts={posts} name={name} atualiza={atualiza}/>} 
+                    { loading ? <Loading>Loading...</Loading>  : <Feed showFollows={showFollows} posts={posts} name={name} atualiza={atualiza}/>} 
                 </TimelineContainer>
                 <HashtagBoxContainer>
                     <HashtagBox hashtags={hashtags} />
