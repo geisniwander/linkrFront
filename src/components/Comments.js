@@ -73,9 +73,9 @@ export default function Comments(props) {
   }
 
   return (
-    <StyledBox data-test="trending">
+    <StyledBox data-test="comment-box">
       {comments?.map((comment) => (
-        <Comment>
+        <Comment data-test="comment">
           <Avatar>
             <img src={comment.picture_url} alt="Avatar" data-test="" />
           </Avatar>
@@ -102,13 +102,15 @@ export default function Comments(props) {
             placeholder="write a comment..."
             value={text}
             onChange={(e) => setText(e.target.value)}
-            data-test=""
+            data-test="comment-input"
             required
           />
+          <div data-test="comment-submit">
           <ion-icon
             name="paper-plane-outline"
             onClick={(e) => postComment(e)}
-          ></ion-icon>
+            ></ion-icon>
+          </div>
         </InputContainer>
       </UserContainer>
     </StyledBox>
