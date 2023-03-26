@@ -33,6 +33,7 @@ footer, header, hgroup, menu, nav, section {
 body {
 	line-height: 1;
 	background-color: #333333;
+	width:100%;
 }
 ol, ul {
 	list-style: none;
@@ -48,6 +49,9 @@ q:before, q:after {
 table {
 	border-collapse: collapse;
 	border-spacing: 0;
+}
+::-webkit-scrollbar {
+    display: none;
 }
 `
 
