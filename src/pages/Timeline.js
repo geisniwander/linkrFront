@@ -72,8 +72,17 @@ export default function Timeline () {
         setNewPosts([]);
     }
 
-    function fetchOlderPosts(){
-        console.log('older')
+    const [hasMorePosts, setHasMorePosts] = useState(true);
+    async function fetchOlderPosts(){
+        const firstCurrentPost = posts.map(p=>Number(p.post_id)).reduce((p, c) => Math.min(p,c), 2 ** 31 - 1);
+        const firstCurrentRepost = posts.map(p=>Number(p.repost_id)).reduce((p, c) => isNaN(c) ? 2 ** 31 - 1 : Math.min(p,c), 2 ** 31 - 1);
+        try {
+            const request = await axios.get(`${process.env.REACT_APP_API_URL}/timeline?postIdBefore=${firstCurrentPost}&repostIdBefore=${firstCurrentRepost}`, config);
+            setPosts([...posts, ...request.data])
+            if(request.data.length === 0) setHasMorePosts(false)
+        } catch (error) {
+            console.log(JSON.stringify(error))
+        }
     }
 
     useInterval(async()=>{
@@ -107,7 +116,7 @@ export default function Timeline () {
                      <InfiniteScroll
                         pageStart={0}
                         loadMore={fetchOlderPosts}
-                        hasMore={true}
+                        hasMore={hasMorePosts}
                         loader={<LoadingMorePosts key="loader">Loading more posts...</LoadingMorePosts>}
                      >                  
                       <Feed showFollows={showFollows} posts={posts} name={name} atualiza={atualiza}/>
