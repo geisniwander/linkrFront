@@ -52,11 +52,15 @@ export default function Timeline () {
 
     }, [ token, navigate, config ]);
 
-    function atualiza(){
+    async function atualiza(){
         // setLoading(true)
-        const requisicao = axios.get(`${process.env.REACT_APP_API_URL}/timeline`, { headers: { 'Authorization': `Bearer ${token}` } });
-        requisicao.then((res) => {setPosts(res.data);setLoading(false)});
-        requisicao.catch((res) => { alert("An error occured while trying to fetch the posts, please refresh the page"); });
+        try {
+            const request = await axios.get(`${process.env.REACT_APP_API_URL}/timeline`, { headers: { 'Authorization': `Bearer ${token}` } });
+            setPosts(request.data);
+            setLoading(false);
+        } catch (error) {
+            alert("An error occured while trying to fetch the posts, please refresh the page");
+        }
     }
 
     function addPost(post){
@@ -66,6 +70,10 @@ export default function Timeline () {
     function updateNewPosts(){
         setPosts([...newPosts, ...posts])
         setNewPosts([]);
+    }
+
+    function fetchOlderPosts(){
+        console.log('older')
     }
 
     useInterval(async()=>{
@@ -98,9 +106,9 @@ export default function Timeline () {
                     { loading ? <Loading>Loading...</Loading>  :
                      <InfiniteScroll
                         pageStart={0}
-                        loadMore={()=>{}}
+                        loadMore={fetchOlderPosts}
                         hasMore={true}
-                        loader={<div className="loader">Loading ...</div>}
+                        loader={<LoadingMorePosts key="loader">Loading more posts...</LoadingMorePosts>}
                      >                  
                       <Feed showFollows={showFollows} posts={posts} name={name} atualiza={atualiza}/>
                    </InfiniteScroll>
@@ -176,4 +184,12 @@ const MorePostsButton = styled.button`
     svg path {
         stroke: #fff;
     }
+`
+
+const LoadingMorePosts = styled.div`
+    font-size: 22px;
+    font-family: "Lato", sans-serif;
+    color: #6D6D6D;
+    width: 100%;
+    text-align: center;
 `
