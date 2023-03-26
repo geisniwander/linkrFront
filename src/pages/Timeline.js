@@ -68,8 +68,10 @@ export default function Timeline () {
     }
 
     function updateNewPosts(){
-        setPosts([...newPosts, ...posts])
-        setNewPosts([]);
+        const postsToAdd = newPosts.filter(p => (!posts.find(post=>post.post_id === p.post_id && p.repost_id === post.repost_id)))
+        console.log(postsToAdd)
+        setPosts([...postsToAdd, ...posts]);
+        setNewPosts([])
     }
 
     const [hasMorePosts, setHasMorePosts] = useState(true);
