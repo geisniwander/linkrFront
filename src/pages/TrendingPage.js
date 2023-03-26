@@ -77,7 +77,7 @@ export default function TrendingPage() {
         {loading ? (
           <LoadingStyle>Loading...</LoadingStyle>
         ) : (
-          <Feed posts={posts} name={name}/>
+          <Feed showFollows={true} posts={posts} name={name}/>
         )}
       </PostsContainer>
     </HashtagsContent>

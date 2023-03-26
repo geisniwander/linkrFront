@@ -106,11 +106,12 @@ export default function Comments(props) {
             data-test="comment-input"
             required
           />
+          <div data-test="comment-submit">
           <ion-icon
             name="paper-plane-outline"
             onClick={(e) => postComment(e)}
-            data-test="comment-submit"
-          ></ion-icon>
+            ></ion-icon>
+          </div>
         </InputContainer>
       </UserContainer>
     </StyledBox>

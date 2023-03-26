@@ -74,7 +74,7 @@ export default function SearchInput({ avatar }) {
           id="search-container"
         >
           {users.map((user) => (
-            <UserContainer data-test="user-search" href={`/user/${user.id}`}>
+            <UserContainer data-test="user-search" href={`/user/${user.id}`} key={user.id}>
               <img src={user.picture_url} />
               <h1> 
                 {user.username} {user.following ? <span> • following</span> : ""}

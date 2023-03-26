@@ -8,12 +8,11 @@ import Post from './Post.js'
 export default function Feed({ posts, name, atualiza, showFollows }) {
     
 
-    console.log(showFollows)
     
 
     return (
         <FeedContainer>
-            {(!showFollows)? <Mensage data-test="message">You don't follow anyone yet. Search for new friends!</Mensage> :(posts.length === 0) ? <Mensage data-test="message">No posts found from your friends</Mensage> : posts.map(p => <Post p={p} name={name} atualiza={atualiza}/>)} 
+            {(!showFollows)? <Mensage data-test="message">You don't follow anyone yet. Search for new friends!</Mensage> :(posts.length === 0) ? <Mensage data-test="message">No posts found from your friends</Mensage> : posts.map(p => <Post key={`${p.post_id}|${p.repost_id}`} p={p} name={name} atualiza={atualiza}/>)} 
              
             
             
