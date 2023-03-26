@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
 
 export default function Comments(props) {
-  const { post_id, refresh, setRefresh } = props;
+  const { post_id, refresh, setRefresh, atualiza } = props;
   const navigate = useNavigate();
   const { token, config } = useContext(AppContext);
   const [avatar, setAvatar] = useState();
@@ -57,6 +57,7 @@ export default function Comments(props) {
         setText("");
         setRef(true);
         setRefresh(true);
+        atualiza();
       });
       comment.catch((res) => {
         alert(res.response.data);

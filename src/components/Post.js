@@ -7,6 +7,7 @@ import {
   AiFillDelete,
   AiOutlineComment,
 } from "react-icons/ai";
+import { BiRepost } from "react-icons/bi";
 import { TiPencil } from "react-icons/ti";
 import { useContext, useState, useEffect } from "react";
 import axios from "axios";
@@ -20,11 +21,14 @@ export default function Post({ p, name, atualiza }) {
   const navigate = useNavigate();
   const { token, config } = useContext(AppContext);
   const [likes, setLikes] = useState([]);
+  const [reposts, setReposts] = useState([]);
   const [edit, setEdit] = useState(p.text);
   const liked = likes.filter((l) => l.username === name);
+  const reposted = reposts.filter(l => l.username === name);
   const [clicado, setClicado] = useState(false);
   const [desabilitado, setDesabilitado] = useState(false);
-  const [modalIsOpen, setIsOpen] = useState(false);
+  const [modalDeleteIsOpen, setDeleteIsOpen] = useState(false);
+  const [modalRepostIsOpen, setRepostIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [comments, setComments] = useState(0);
   const [refresh, setRefresh] = useState(false);
@@ -58,6 +62,17 @@ export default function Post({ p, name, atualiza }) {
       requisicaoComentarios.catch((res) => {
         alert(res.response.data);
       });
+
+      const requisicaoReposts = axios.get(
+        `${process.env.REACT_APP_API_URL}/reposts/${p.post_id}`,
+        { headers: { 'Authorization': `Bearer ${token}` } }
+      );
+      requisicaoReposts.then((res) => {
+        setReposts(res.data)
+      });
+      requisicaoReposts.catch((res) => {
+        alert(res.response.data);
+      });
     } else {
       setLikes([]);
     }
@@ -70,6 +85,7 @@ export default function Post({ p, name, atualiza }) {
     );
     requisicaoLikes.then((res) => {
       setLikes(res.data);
+      atualiza();
     });
     requisicaoLikes.catch((res) => {
       alert(res.response.data);
@@ -101,28 +117,26 @@ export default function Post({ p, name, atualiza }) {
       alert(res.response.data);
     });
   }
-  function names() {
+  function names(array, done) {
     let message = "";
-    if (liked.length !== 0) {
+    const uniqueObjects = [...new Set(array.map(item => item.username))]; 
+    if (done.length !== 0) {
       message += "Você";
-      const quant = likes.filter((l) => l.username !== liked[0].username);
+      const quant = uniqueObjects.filter(l => l !== done[0].username);
       if (quant.length === 1) {
-        message += ` e ${quant[0].username}`;
+        message += ` e ${quant[0]}`;
       } else if (quant.length > 1) {
-        message += `, ${quant[0].username} e outras ${quant.length - 1}`;
+        message += `, ${quant[0]} e outras ${quant.length - 1}`;
       }
     } else {
-      if (likes.length === 1) {
-        message += `${likes[0].username}`;
-      } else if (likes.length === 2) {
-        message += `${likes[0].username} e ${likes[1].username}`;
-      } else if (likes.length > 2) {
-        message += `${likes[0].username}, ${likes[1].username} e outras ${
-          likes.length - 2
-        }`;
+      if (uniqueObjects.length === 1) {
+        message += `${uniqueObjects[0]}`;
+      } else if (uniqueObjects.length === 2) {
+        message += `${uniqueObjects[0]} e ${uniqueObjects[1]}`;
+      } else if (uniqueObjects.length > 2) {
+        message += `${uniqueObjects[0]}, ${uniqueObjects[1]} e outras ${uniqueObjects.length - 2}`;
       }
     }
-
     return `<span data-test="tooltip">${message}</span>`;
   }
   function onKeyPressed(e) {
@@ -148,9 +162,11 @@ export default function Post({ p, name, atualiza }) {
       });
     }
   }
-
-  function toggleModal(e) {
-    setIsOpen(!modalIsOpen);
+  function toggleModalDelete(e) {
+    setDeleteIsOpen(!modalDeleteIsOpen)
+  }
+  function toggleModalRepost(e) {
+    setRepostIsOpen(!modalRepostIsOpen)
   }
   function deletePublish() {
     setLoading(true);
@@ -160,24 +176,47 @@ export default function Post({ p, name, atualiza }) {
     );
     requisicao.then((res) => {
       setLoading(false);
-      setIsOpen(!modalIsOpen);
+      setDeleteIsOpen(!modalDeleteIsOpen);
       atualiza();
     });
     requisicao.catch((res) => {
       alert(res.response.data);
-      setIsOpen(!modalIsOpen);
+      setDeleteIsOpen(!modalDeleteIsOpen);
     });
   }
 
-  function comment() {}
+  function comment() { }
 
+  function repostPublish() {
+    setLoading(true)
+    const requisicao = axios.post(
+      `${process.env.REACT_APP_API_URL}/reposts`,
+      { post_id: p.post_id }, { headers: { 'Authorization': `Bearer ${token}` } }
+    );
+    requisicao.then((res) => {
+      setLoading(false);
+      setRepostIsOpen(!modalRepostIsOpen);
+      atualiza();
+    });
+    requisicao.catch((res) => {
+      alert(res.response.data);
+      setRepostIsOpen(!modalRepostIsOpen);
+    });
+  }
   return (
     <>
-      <PostContainer clicado={clicado} data-test="post">
+      <Repost reposted_by = {p.reposted_by}>
+        <BiRepostStyled /> 
+        <span>Re-posted by <strong>{p.reposted_by === name ? "you" : p.reposted_by}</strong></span>
+      </Repost>
+
+      <PostContainer clicado={clicado} reposted_by = {p.reposted_by} data-test="post">
         <AvatarLikeContainer>
           <ImageAvatar src={p.picture_url} alt={"avatar"} />
           {liked.length === 0 ? (
-            <AiOutlineHeart onClick={() => postlike(p)} data-test="like-btn" />
+           <div data-test="like-btn">
+              <AiOutlineHeart onClick={() => postlike(p)}  />
+           </div> 
           ) : (
             <AiFillHeartStyled
               onClick={() => removelike(p)}
@@ -189,7 +228,7 @@ export default function Post({ p, name, atualiza }) {
             data-tooltip-html={
               likes.length === 0
                 ? `<span data-test="tooltip"> Ninguém curtiu </span>`
-                : names()
+                : names(likes, liked)
             }
             data-test="counter"
           >
@@ -233,7 +272,7 @@ export default function Post({ p, name, atualiza }) {
                 data-test="edit-btn"
               />
               <AiFillDelete
-                onClick={() => setIsOpen(!modalIsOpen)}
+                onClick={() => setDeleteIsOpen(!modalDeleteIsOpen)}
                 data-test="delete-btn"
               />
             </div>
@@ -268,9 +307,9 @@ export default function Post({ p, name, atualiza }) {
           </LinkContainer>
         </div>
         <StyledModal
-          isOpen={modalIsOpen}
-          onBackgroundClick={toggleModal}
-          onEscapeKeydown={toggleModal}
+          isOpen={modalDeleteIsOpen}
+          onBackgroundClick={toggleModalDelete}
+          onEscapeKeydown={toggleModalDelete}
         >
           <Loading loading={loading}>Loading...</Loading>
           <ModalContainer loading={loading}>
@@ -280,7 +319,7 @@ export default function Post({ p, name, atualiza }) {
               to delete this post?
             </TitleModal>
             <div>
-              <ButtonCancel onClick={toggleModal} data-test="cancel">
+              <ButtonCancel onClick={toggleModalDelete} data-test="cancel">
                 No, go back
               </ButtonCancel>
               <ButtonConfirm onClick={deletePublish} data-test="confirm">
@@ -289,9 +328,24 @@ export default function Post({ p, name, atualiza }) {
             </div>
           </ModalContainer>
         </StyledModal>
+        <StyledModal
+          isOpen={modalRepostIsOpen}
+          onBackgroundClick={toggleModalRepost}
+          onEscapeKeydown={toggleModalRepost}
+        >
+          <Loading loading={loading}>Loading...</Loading>
+          <ModalContainer loading={loading}>
+            <TitleModal>Do you want to re-post<br />this link?</TitleModal>
+            <div>
+              <ButtonCancel onClick={toggleModalRepost} data-test="cancel">No, cancel</ButtonCancel>
+              <ButtonConfirm onClick={repostPublish} data-test="confirm">Yes, share!</ButtonConfirm>
+            </div>
+          </ModalContainer>
+        </StyledModal>
       </PostContainer>
       {openComments && (
         <Comments
+          atualiza={atualiza}
           post_id={p.post_id}
           refresh={refresh}
           setRefresh={setRefresh}
@@ -374,6 +428,7 @@ const PostContainer = styled.div`
   padding: 19px;
   word-break: break-all;
   margin-bottom: 16px;
+  margin-top: ${(props) => (props.reposted_by ? "-25px" : "0")};
   @media (max-width: 650px) {
     border-radius: 0px;
     min-height: 232px;
@@ -555,4 +610,30 @@ const ButtonConfirm = styled.button`
   color: #ffffff;
   border: none;
   margin-left: 15px;
+`;
+
+const Repost = styled.div`
+  display: ${(props) => (props.reposted_by ? "flex" : "none")};
+  background-color: #1E1E1E;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 13px;
+  color: #FFFFFF;
+  height: 40px;
+  padding: 10px 15px;
+  span{
+    margin-left: 10px;
+    margin-top: 2px;
+  }
+  strong{
+    font-weight: bold;
+  }
+`
+
+const BiRepostStyled = styled(BiRepost)`
+  font-size: 18px;
 `;
