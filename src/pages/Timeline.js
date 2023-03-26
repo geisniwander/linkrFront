@@ -9,6 +9,7 @@ import Feed from "../components/Feed";
 import HashtagBox from "../components/HashtagsBox";
 import useInterval from "use-interval"
 import {GrUpdate} from "react-icons/gr"
+import InfiniteScroll from "react-infinite-scroller";
 
 export default function Timeline () {
     const [loading, setLoading] = useState(true)
@@ -77,7 +78,7 @@ export default function Timeline () {
             console.log(JSON.stringify(error))
         }
 
-    },1500)
+    },15000)
 
     useEffect(()=>{
         if (posts.length > 0)
@@ -94,7 +95,16 @@ export default function Timeline () {
                     {newPosts?.length > 0 && <MorePostsButton data-test="load-btn" onClick={updateNewPosts}>
                         {newPosts.length} new posts, load more! <GrUpdate />
                     </MorePostsButton>}
-                    { loading ? <Loading>Loading...</Loading>  : <Feed showFollows={showFollows} posts={posts} name={name} atualiza={atualiza}/>} 
+                    { loading ? <Loading>Loading...</Loading>  :
+                     <InfiniteScroll
+                        pageStart={0}
+                        loadMore={()=>{}}
+                        hasMore={true}
+                        loader={<div className="loader">Loading ...</div>}
+                     >                  
+                      <Feed showFollows={showFollows} posts={posts} name={name} atualiza={atualiza}/>
+                   </InfiniteScroll>
+                    } 
                 </TimelineContainer>
                 <HashtagBoxContainer>
                     <HashtagBox hashtags={hashtags} />
