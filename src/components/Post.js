@@ -19,12 +19,12 @@ import Comments from "./Comments";
 
 export default function Post({ p, name, atualiza }) {
   const navigate = useNavigate();
-  const { token, config } = useContext(AppContext);
+  const { token } = useContext(AppContext);
   const [likes, setLikes] = useState([]);
   const [reposts, setReposts] = useState([]);
   const [edit, setEdit] = useState(p.text);
   const liked = likes.filter((l) => l.username === name);
-  const reposted = reposts.filter(l => l.username === name);
+  const reposted = reposts.filter((l) => l.username === name);
   const [clicado, setClicado] = useState(false);
   const [desabilitado, setDesabilitado] = useState(false);
   const [modalDeleteIsOpen, setDeleteIsOpen] = useState(false);
@@ -53,7 +53,7 @@ export default function Post({ p, name, atualiza }) {
 
       const requisicaoComentarios = axios.get(
         `${process.env.REACT_APP_API_URL}/comments/${p.post_id}`,
-        config
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       requisicaoComentarios.then((res) => {
         setComments(res.data.length);
@@ -65,10 +65,10 @@ export default function Post({ p, name, atualiza }) {
 
       const requisicaoReposts = axios.get(
         `${process.env.REACT_APP_API_URL}/reposts/${p.post_id}`,
-        { headers: { 'Authorization': `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       requisicaoReposts.then((res) => {
-        setReposts(res.data)
+        setReposts(res.data);
       });
       requisicaoReposts.catch((res) => {
         alert(res.response.data);
@@ -119,10 +119,10 @@ export default function Post({ p, name, atualiza }) {
   }
   function names(array, done) {
     let message = "";
-    const uniqueObjects = [...new Set(array.map(item => item.username))]; 
+    const uniqueObjects = [...new Set(array.map((item) => item.username))];
     if (done.length !== 0) {
       message += "Você";
-      const quant = uniqueObjects.filter(l => l !== done[0].username);
+      const quant = uniqueObjects.filter((l) => l !== done[0].username);
       if (quant.length === 1) {
         message += ` e ${quant[0]}`;
       } else if (quant.length > 1) {
@@ -134,7 +134,9 @@ export default function Post({ p, name, atualiza }) {
       } else if (uniqueObjects.length === 2) {
         message += `${uniqueObjects[0]} e ${uniqueObjects[1]}`;
       } else if (uniqueObjects.length > 2) {
-        message += `${uniqueObjects[0]}, ${uniqueObjects[1]} e outras ${uniqueObjects.length - 2}`;
+        message += `${uniqueObjects[0]}, ${uniqueObjects[1]} e outras ${
+          uniqueObjects.length - 2
+        }`;
       }
     }
     return `<span data-test="tooltip">${message}</span>`;
@@ -163,10 +165,10 @@ export default function Post({ p, name, atualiza }) {
     }
   }
   function toggleModalDelete(e) {
-    setDeleteIsOpen(!modalDeleteIsOpen)
+    setDeleteIsOpen(!modalDeleteIsOpen);
   }
   function toggleModalRepost(e) {
-    setRepostIsOpen(!modalRepostIsOpen)
+    setRepostIsOpen(!modalRepostIsOpen);
   }
   function deletePublish() {
     setLoading(true);
@@ -188,10 +190,11 @@ export default function Post({ p, name, atualiza }) {
   function comment() { }
 
   function repostPublish() {
-    setLoading(true)
+    setLoading(true);
     const requisicao = axios.post(
       `${process.env.REACT_APP_API_URL}/reposts`,
-      { post_id: p.post_id }, { headers: { 'Authorization': `Bearer ${token}` } }
+      { post_id: p.post_id },
+      { headers: { Authorization: `Bearer ${token}` } }
     );
     requisicao.then((res) => {
       setLoading(false);
@@ -205,12 +208,19 @@ export default function Post({ p, name, atualiza }) {
   }
   return (
     <>
-      <Repost reposted_by = {p.reposted_by}>
-        <BiRepostStyled /> 
-        <span>Re-posted by <strong>{p.reposted_by === name ? "you" : p.reposted_by}</strong></span>
+      <Repost reposted_by={p.reposted_by}>
+        <BiRepostStyled />
+        <span>
+          Re-posted by{" "}
+          <strong>{p.reposted_by === name ? "you" : p.reposted_by}</strong>
+        </span>
       </Repost>
 
-      <PostContainer clicado={clicado} reposted_by = {p.reposted_by} data-test="post">
+      <PostContainer
+        clicado={clicado}
+        reposted_by={p.reposted_by}
+        data-test="post"
+      >
         <AvatarLikeContainer>
           <ImageAvatar src={p.picture_url} alt={"avatar"} />
           {liked.length === 0 ? (
@@ -263,7 +273,11 @@ export default function Post({ p, name, atualiza }) {
           >
             {reposts.length} re-posts
           </p>
-          <ReactTooltipStyled id="my-tooltip" data-test="tooltip" isOpen={true} />
+          <ReactTooltipStyled
+            id="my-tooltip"
+            data-test="tooltip"
+            isOpen={true}
+          />
         </AvatarLikeContainer>
         <div>
           <PostHeaderContainer myPost={p.username === name}>
@@ -349,10 +363,18 @@ export default function Post({ p, name, atualiza }) {
         >
           <Loading loading={loading}>Loading...</Loading>
           <ModalContainer loading={loading}>
-            <TitleModal>Do you want to re-post<br />this link?</TitleModal>
+            <TitleModal>
+              Do you want to re-post
+              <br />
+              this link?
+            </TitleModal>
             <div>
-              <ButtonCancel onClick={toggleModalRepost} data-test="cancel">No, cancel</ButtonCancel>
-              <ButtonConfirm onClick={repostPublish} data-test="confirm">Yes, share!</ButtonConfirm>
+              <ButtonCancel onClick={toggleModalRepost} data-test="cancel">
+                No, cancel
+              </ButtonCancel>
+              <ButtonConfirm onClick={repostPublish} data-test="confirm">
+                Yes, share!
+              </ButtonConfirm>
             </div>
           </ModalContainer>
         </StyledModal>
@@ -401,8 +423,8 @@ const AvatarLikeContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-size: 30px;
-  margin-right: 10px;
+  font-size: 26px;
+  margin-right: 15px;
   p {
     font-family: "Lato";
     font-style: normal;
@@ -490,7 +512,7 @@ const Description = styled.input`
 `;
 
 const LinkContainer = styled.a`
-  width: 503px;
+  width: 490px;
   min-height: 155px;
   border: 1px solid #4d4d4d;
   border-radius: 11px;
@@ -628,25 +650,25 @@ const ButtonConfirm = styled.button`
 
 const Repost = styled.div`
   display: ${(props) => (props.reposted_by ? "flex" : "none")};
-  background-color: #1E1E1E;
+  background-color: #1e1e1e;
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
-  font-family: 'Lato';
+  font-family: "Lato";
   font-style: normal;
   font-weight: 400;
   font-size: 11px;
   line-height: 13px;
-  color: #FFFFFF;
+  color: #ffffff;
   height: 40px;
   padding: 10px 15px;
-  span{
+  span {
     margin-left: 10px;
     margin-top: 2px;
   }
-  strong{
+  strong {
     font-weight: bold;
   }
-`
+`;
 
 const BiRepostStyled = styled(BiRepost)`
   font-size: 18px;

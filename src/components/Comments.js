@@ -7,7 +7,7 @@ import { useContext, useState, useEffect } from "react";
 export default function Comments(props) {
   const { post_id, refresh, setRefresh, atualiza } = props;
   const navigate = useNavigate();
-  const { token, config } = useContext(AppContext);
+  const { token } = useContext(AppContext);
   const [avatar, setAvatar] = useState();
   const [text, setText] = useState();
   const [comments, setComments] = useState();
@@ -17,7 +17,7 @@ export default function Comments(props) {
     if (token) {
       const requisicaoAvatar = axios.get(
         `${process.env.REACT_APP_API_URL}/avatar`,
-        config
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       requisicaoAvatar.then((res) => {
         setAvatar(res.data.picture_url);
@@ -28,7 +28,7 @@ export default function Comments(props) {
 
       const requisicaoComentarios = axios.get(
         `${process.env.REACT_APP_API_URL}/comments/${post_id}`,
-        config
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       requisicaoComentarios.then((res) => {
         console.log(res.data);
@@ -68,8 +68,9 @@ export default function Comments(props) {
     }
   }
 
-  function following(post_author, user_id, username) {
+  function following(post_author, user_id, is_followed) {
     if (post_author === user_id) return <spam> • post's author</spam>;
+    else if (is_followed === "true") return <spam> • following</spam>;
   }
 
   return (
@@ -85,7 +86,7 @@ export default function Comments(props) {
               {following(
                 comment.post_author,
                 comment.user_id,
-                comment.username
+                comment.is_followed
               )}
             </h1>
             <p>{comment.text}</p>
@@ -135,7 +136,7 @@ const StyledBox = styled.div`
 const Avatar = styled.div`
   display: flex;
   align-items: center;
-  margin: 10px 17px;
+  margin-right: 17px;
   img {
     width: 45px;
     height: 45px;
@@ -208,6 +209,7 @@ const Comment = styled.div`
   width: 90%;
   height: 70px;
   display: flex;
+  justify-content: start;
   color: white;
   align-items: center;
   background: #1e1e1e;
