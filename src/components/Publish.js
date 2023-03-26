@@ -10,8 +10,8 @@ export default function Publish ({avatar, atualiza, addPost}) {
     
     async function salvar(event) {
         event.preventDefault();
-        adicionarPost();
         setClicado(true);
+        adicionarPost();
         try {
             await axios.post(`${process.env.REACT_APP_API_URL}/publish`, publish, { headers: { 'Authorization': `Bearer ${token}` } });
             setPublish({ link: "", description: "" });
