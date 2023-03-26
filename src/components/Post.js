@@ -214,7 +214,9 @@ export default function Post({ p, name, atualiza }) {
         <AvatarLikeContainer>
           <ImageAvatar src={p.picture_url} alt={"avatar"} />
           {liked.length === 0 ? (
-            <AiOutlineHeart onClick={() => postlike(p)} data-test="like-btn" />
+           <div data-test="like-btn">
+              <AiOutlineHeart onClick={() => postlike(p)}  />
+           </div> 
           ) : (
             <AiFillHeartStyled
               onClick={() => removelike(p)}
@@ -237,17 +239,24 @@ export default function Post({ p, name, atualiza }) {
             data-test="tooltip"
             isOpen={true}
           />
-          <AiOutlineComment
-            onClick={() =>
-              (openComments === false) ? setOpenComments(true) : setOpenComments(false)
-            }
+          <div
             data-test="comment-btn"
-          />
+          >
+            <AiOutlineComment
+              onClick={() =>
+                (openComments === false) ? setOpenComments(true) : setOpenComments(false)
+              }
+            />
+          </div>
           <p>{comments} comments</p>
-          <BiRepost
-            onClick={() => setRepostIsOpen(!modalRepostIsOpen)}
-            data-test="repost-btn"
-          />
+          <div
+            data-test="repost-btn"          
+          >
+
+            <BiRepost
+              onClick={() => setRepostIsOpen(!modalRepostIsOpen)}
+              />
+          </div>
           <p
             data-tooltip-id="my-tooltip"
             data-tooltip-html={reposts.length === 0 ? `<span data-test="tooltip"> Ninguém repostou </span>` : names(reposts, reposted)}
