@@ -28,7 +28,7 @@ export default function Timeline () {
             requisicaoAvatar.then((res) => {setAvatar(res.data.picture_url); setName(res.data.username)});
             requisicaoAvatar.catch((res) => { alert(res.response.data); });
 
-            const requisicaoPosts = axios.get(`${process.env.REACT_APP_API_URL}/followedposts`, config);
+            const requisicaoPosts = axios.get(`${process.env.REACT_APP_API_URL}/timeline`, config);
             requisicaoPosts.then((res) => {setPosts(res.data);setLoading(false)});
             requisicaoPosts.catch((res) => { alert("An error occured while trying to fetch the posts, please refresh the page"); });
             
@@ -42,7 +42,6 @@ export default function Timeline () {
         }else{
             navigate("/");
         }
-        console.log("chegou")
             const requisicaoLikes = axios.get(`${process.env.REACT_APP_API_URL}/user/showfollows`, { headers: { 'Authorization': `Bearer ${token}` } });
             requisicaoLikes.then((res) => { 
                 console.log(res.data)
@@ -54,7 +53,7 @@ export default function Timeline () {
 
     function atualiza(){
         // setLoading(true)
-        const requisicao = axios.get(`${process.env.REACT_APP_API_URL}/followedposts`, { headers: { 'Authorization': `Bearer ${token}` } });
+        const requisicao = axios.get(`${process.env.REACT_APP_API_URL}/timeline`, { headers: { 'Authorization': `Bearer ${token}` } });
         requisicao.then((res) => {setPosts(res.data);setLoading(false)});
         requisicao.catch((res) => { alert("An error occured while trying to fetch the posts, please refresh the page"); });
     }
@@ -70,14 +69,15 @@ export default function Timeline () {
 
     useInterval(async()=>{
         const lastCurrentPost = posts.map(p=>Number(p.post_id)).reduce((p, c) => Math.max(p,c), 0);
+        const lastCurrentReposts = posts.map(p=>Number(p.repost_id)).reduce((p, c) => isNaN(c) ? 0 : Math.max(p,c), 0);
         try {
-            const request = await axios.get(`${process.env.REACT_APP_API_URL}/followedposts?postIdAfter=${lastCurrentPost}`, config);
+            const request = await axios.get(`${process.env.REACT_APP_API_URL}/timeline?postIdAfter=${lastCurrentPost}&repostIdAfter=${lastCurrentReposts}`, config);
             setNewPosts(request.data)
         } catch (error) {
             console.log(JSON.stringify(error))
         }
 
-    },15000)
+    },1500)
 
     useEffect(()=>{
         if (posts.length > 0)

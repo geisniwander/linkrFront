@@ -250,6 +250,20 @@ export default function Post({ p, name, atualiza }) {
             />
           </div>
           <p data-test="comment-counter">{comments} comments</p>
+          <div data-test="repost-btn">
+            <BiRepost
+              onClick={() => setRepostIsOpen(!modalRepostIsOpen)}
+              data-test="repost-btn"
+              />
+          </div>
+          <p
+            data-tooltip-id="my-tooltip"
+            data-tooltip-html={reposts.length === 0 ? `<span data-test="tooltip"> Ninguém repostou </span>` : names(reposts, reposted)}
+            data-test="repost-counter"
+          >
+            {reposts.length} re-posts
+          </p>
+          <ReactTooltipStyled id="my-tooltip" data-test="tooltip" isOpen={true} />
         </AvatarLikeContainer>
         <div>
           <PostHeaderContainer myPost={p.username === name}>
