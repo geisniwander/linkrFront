@@ -65,7 +65,7 @@ export default function Profile() {
         console.log(follow);
       })
       requisicaoFollow.catch((error) =>{
-        console.log(error.message)
+        console.log(error.response.data)
         alert("Something went wrong, please refresh the page.");
         setLoading(false);
       })
@@ -79,7 +79,7 @@ export default function Profile() {
           
         })
         requisicaoButton.catch((err) => {
-          console.log(err.message);
+          console.log(err.response.data);
           alert("Error loading button")
         })
 
@@ -120,18 +120,18 @@ export default function Profile() {
 
 
   function following(){
-    setLoading(true);
+    setDisabled(true);
     const requisicao = axios.get(
       `${process.env.REACT_APP_API_URL}/user/${id}/follow`,
       { headers: { Authorization: `Bearer ${token}`}}
     );
     requisicao.then((res) => {
       setFollow(!follow);
-      setLoading(false);
+      setDisabled(false);
     });
     requisicao.catch((error) => {
-      alert("Something went wrong, please try again!");
-      setLoading(false);
+      alert(error.response.data);
+      setDisabled(false);
     })
   } 
 
@@ -146,7 +146,7 @@ export default function Profile() {
         <TimelineContainer>
           <TitleWrapper>
           <Title> <img src={avatarProfile} alt=""/> {name}'s posts</Title>
-          {button ? <FollowButton data-test="follow-btn" follow={follow} loading={loading} onClick={following}>{follow ? "Follow" : "Unfollow"}</FollowButton> : null}
+          {button ? <FollowButton data-test="follow-btn" disabled={disabled} follow={follow} loading={loading} onClick={following}>{follow ? "Follow" : "Unfollow"}</FollowButton> : null}
           
           
           
