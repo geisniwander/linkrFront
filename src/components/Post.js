@@ -207,7 +207,7 @@ export default function Post({ p, name, atualiza }) {
     });
   }
   return (
-    <>
+    <div data-test="post">
       <Repost reposted_by={p.reposted_by}>
         <BiRepostStyled />
         <span>
@@ -219,7 +219,6 @@ export default function Post({ p, name, atualiza }) {
       <PostContainer
         clicado={clicado}
         reposted_by={p.reposted_by}
-        data-test="post"
       >
         <AvatarLikeContainer>
           <ImageAvatar src={p.picture_url} alt={"avatar"} />
@@ -387,7 +386,7 @@ export default function Post({ p, name, atualiza }) {
           setRefresh={setRefresh}
         />
       )}
-    </>
+    </div>
   );
 }
 const Loading = styled.div`
