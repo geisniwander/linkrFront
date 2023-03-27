@@ -130,7 +130,7 @@ export default function Profile() {
       setDisabled(false);
     });
     requisicao.catch((error) => {
-      alert(error.response.data);
+      alert(error.message);
       setDisabled(false);
     })
   } 
